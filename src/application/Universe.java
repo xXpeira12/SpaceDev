@@ -2,7 +2,7 @@ package application;
 
 import javafx.scene.paint.Color;
 
-import static application.SpaceInvaders.*;
+import static application.Main.*;
 
 public class Universe {
     private int posX;

@@ -2,8 +2,8 @@ package application;
 
 import javafx.scene.paint.Color;
 
-import static application.SpaceInvaders.gc;
-import static application.SpaceInvaders.score;
+import static application.Main.gc;
+import static application.Main.score;
 
 public class Shot {
     public boolean toRemove;

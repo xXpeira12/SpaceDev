@@ -2,8 +2,8 @@ package application;
 
 import javafx.scene.image.Image;
 
-import static application.SpaceInvaders.HEIGHT;
-import static application.SpaceInvaders.score;
+import static application.Main.HEIGHT;
+import static application.Main.score;
 
 public class Bomb extends Rocket{
     private int SPEED = (score / 5) + 2;

@@ -2,7 +2,7 @@ package application;
 
 import javafx.scene.image.Image;
 
-import static application.SpaceInvaders.*;
+import static application.Main.*;
 
 public class Rocket {
     private int posX;
