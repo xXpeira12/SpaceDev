@@ -1,16 +1,19 @@
-package application;
+package shot;
 
+import ability.Drawable;
+import ability.Updatable;
 import javafx.scene.paint.Color;
+import rocket.Rocket;
 
 import static application.Main.gc;
 import static application.Main.score;
 
-public class Shot {
+public class Shot implements Drawable, Updatable {
     public boolean toRemove;
     private int posX = 10;
     private int posY = 10;
     private int speed = 10;
-    static final int size = 6;
+    public static final int size = 6;
 
     public Shot(int posX, int posY) {
         this.posX = posX;

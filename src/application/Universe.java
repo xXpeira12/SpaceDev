@@ -1,10 +1,11 @@
 package application;
 
+import ability.Drawable;
 import javafx.scene.paint.Color;
 
 import static application.Main.*;
 
-public class Universe {
+public class Universe implements Drawable {
     private int posX;
     private int posY;
     private int h, w, r, g, b;

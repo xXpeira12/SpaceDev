@@ -1,10 +1,13 @@
-package application;
+package rocket;
 
+import ability.Drawable;
+import ability.Updatable;
+import shot.Shot;
 import javafx.scene.image.Image;
 
 import static application.Main.*;
 
-public class Rocket {
+public class Rocket implements Drawable, Updatable {
     private int posX;
     private int posY;
     private int size;

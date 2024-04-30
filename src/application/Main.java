@@ -14,6 +14,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import rocket.Bomb;
+import rocket.Rocket;
+import shot.Shot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,31 +24,31 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 public class Main extends Application {
-    static final Random RAND = new Random();
-    static final int WIDTH = 800;
-    static final int HEIGHT = 600;
-    static final int PLAYER_SIZE = 60;
-    static final Image PLAYER_IMG = new Image("file:assets/player.png");
-    static final Image EXPLOSION_IMG = new Image("file:assets/explosion.png");
-    static final int EXPLOSION_W = 128;
-    static final int EXPLOSION_ROWS = 3;
-    static final int EXPLOSION_COLS = 3;
-    static final int EXPLOSION_H = 128;
-    static final int EXPLOSION_STEPS = 15;
-    static final Image BOMBS_IMG[] = {
+    public static final Random RAND = new Random();
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
+    public static final int PLAYER_SIZE = 60;
+    public static final Image PLAYER_IMG = new Image("file:assets/player.png");
+    public static final Image EXPLOSION_IMG = new Image("file:assets/explosion.png");
+    public static final int EXPLOSION_W = 128;
+    public static final int EXPLOSION_ROWS = 3;
+    public static final int EXPLOSION_COLS = 3;
+    public static final int EXPLOSION_H = 128;
+    public static final int EXPLOSION_STEPS = 15;
+    public static final Image BOMBS_IMG[] = {
       new Image("file:assets/1.png"),
       new Image("file:assets/2.png")
     };
     final int MAX_BOMBS = 10;
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
-    static GraphicsContext gc;
+    public static GraphicsContext gc;
     Rocket player;
     List<Shot> shots;
     List<Universe> univ;
     List<Bomb> Bombs;
     private double mouseX;
-    static int score;
+    public static int score;
 
     @Override
     public void start(Stage stage) throws Exception {
