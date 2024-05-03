@@ -1,34 +1,42 @@
 package shot;
 
-import static application.Main.gc;
-import javafx.scene.paint.Color;
-import rocket.Rocket;
-
-import java.util.Arrays;
-
 public class SpreadShot extends SpeedShot{
     private int numShots;
-    private Shot[] shots;
+    private SpeedShot[] shots;
+    private int spaceBetweenShot;
 
-    public SpreadShot(int posX, int posY, int numShots) {
+    public SpreadShot(int posX, int posY, int numShots, int spaceBetweenShot) {
         super(posX, posY);
         this.numShots = numShots;
-        this.shots = new Shot[numShots];
+        this.shots = new SpeedShot[numShots];
+        this.spaceBetweenShot = spaceBetweenShot;
+        int initialX = -this.spaceBetweenShot * (numShots / 2);
         for(int i=0; i < numShots; i++) {
-            shots[i] = new Shot((int) (posX + Math.pow(-1, i) * i * 30), posY);
+            shots[i] = new SpeedShot(posX + initialX + i * this.spaceBetweenShot, posY);
         }
     }
 
-    public void update() {
-        for (int i = 0; i < numShots; i++) {
-            shots[i].setPosY(shots[i].getPosY() - shots[i].getSpeed());
-        }
+    public int getNumShots() {
+        return numShots;
     }
 
-    public void draw() {
-        for(int i = 0; i < numShots; i++) {
-            gc.setFill(Color.RED);
-            gc.fillOval(shots[i].getPosX(), shots[i].getPosY(), size, size);
-        }
+    public void setNumShots(int numShots) {
+        this.numShots = numShots;
+    }
+
+    public Shot[] getShots() {
+        return shots;
+    }
+
+    public void setShots(Shot[] shots) {
+        this.shots = (SpeedShot[]) shots;
+    }
+
+    public int getSpaceBetweenShot() {
+        return spaceBetweenShot;
+    }
+
+    public void setSpaceBetweenShot(int spaceBetweenShot) {
+        this.spaceBetweenShot = spaceBetweenShot;
     }
 }

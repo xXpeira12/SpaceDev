@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import rocket.Bomb;
 import rocket.Rocket;
 import shot.Shot;
+import shot.SpreadShot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +142,13 @@ public class Main extends Application {
             player.setPosX(player.getPosX() + 5);
         }
         if (shoot && !shotFired && shots.size() < MAX_SHOTS) {
-            shots.add(player.shoot());
+            if(player.shoot() instanceof SpreadShot) {
+              for(Shot eachShot : new SpreadShot(player.shoot().getPosX(), player.shoot().getPosY(), ((SpreadShot) player.shoot()).getNumShots(), ((SpreadShot) player.shoot()).getSpaceBetweenShot()).getShots()) {
+                  shots.add(eachShot);
+              }
+            } else {
+                shots.add(player.shoot());
+            }
             shotFired = true;
         }
 
