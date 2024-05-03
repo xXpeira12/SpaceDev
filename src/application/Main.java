@@ -39,7 +39,7 @@ public class Main extends Application {
       new Image("file:assets/1.png"),
       new Image("file:assets/2.png")
     };
-    final int MAX_BOMBS = 10;
+    final int MAX_BOMBS = 6;
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
     public static GraphicsContext gc;
@@ -54,7 +54,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         gc = canvas.getGraphicsContext2D();
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> run(gc)));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000.0 / 60), e -> run(gc)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
         canvas.setCursor(Cursor.MOVE);
@@ -80,7 +80,6 @@ public class Main extends Application {
         score = 0;
         IntStream.range(0, MAX_BOMBS).mapToObj(i -> new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)])).forEach(Bombs::add);
     }
-
     private void run(GraphicsContext gc) {
         gc.setFill(Color.grayRgb(20));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
@@ -89,11 +88,13 @@ public class Main extends Application {
         gc.setFill(Color.WHITE);
         gc.fillText("Score: " + score, 60, 20);
 
-        if(gameOver) {
+        if (gameOver) {
             gc.setFont(Font.font(35));
             gc.setFill(Color.YELLOW);
             gc.fillText("Game Over \n Your Score is: " + score + " \n Click to play again", WIDTH / 2, HEIGHT / 2.5);
+            return;
         }
+
         univ.forEach(Universe::draw);
 
         player.update();
@@ -101,19 +102,21 @@ public class Main extends Application {
         player.setPosX((int) mouseX);
 
         Bombs.stream().peek(Rocket::update).peek(Rocket::draw).forEach(e -> {
-            if(player.colide(e) && !player.isExploding()) player.explode();
+            if (player.colide(e) && !player.isExploding()) {
+                player.explode();
+            }
         });
 
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
-            if(shot.getPosY() < 0 || shot.isToRemove()) {
+            if (shot.getPosY() < 0 || shot.isToRemove()) {
                 shots.remove(i);
                 continue;
             }
             shot.update();
             shot.draw();
-            for(Bomb bomb : Bombs) {
-                if(shot.colide(bomb) && !bomb.isExploding()) {
+            for (Bomb bomb : Bombs) {
+                if (shot.colide(bomb) && !bomb.isExploding()) {
                     score++;
                     bomb.explode();
                     shot.setToRemove(true);
@@ -121,14 +124,20 @@ public class Main extends Application {
             }
         }
 
-        for(int i = Bombs.size() - 1; i >= 0; i--) {
-            if(Bombs.get(i).isDestroyed()) Bombs.set(i, new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)]));
+        for (int i = Bombs.size() - 1; i >= 0; i--) {
+            if (Bombs.get(i).isDestroyed()) {
+                Bombs.set(i, new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)]));
+            }
         }
 
         gameOver = player.isDestroyed();
-        if(RAND.nextInt(10) > 2) univ.add(new Universe());
-        for(int i = 0; i < univ.size(); i++) {
-            if(univ.get(i).getPosY() > HEIGHT) univ.remove(i);
+        if (RAND.nextInt(10) > 2) {
+            univ.add(new Universe());
+        }
+        for (int i = 0; i < univ.size(); i++) {
+            if (univ.get(i).getPosY() > HEIGHT) {
+                univ.remove(i);
+            }
         }
     }
 }

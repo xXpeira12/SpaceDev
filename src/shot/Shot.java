@@ -12,7 +12,7 @@ public class Shot implements Drawable, Updatable {
     public boolean toRemove;
     private int posX = 10;
     private int posY = 10;
-    private int speed = 10;
+    private int speed = 15;
     public static final int size = 6;
 
     public Shot(int posX, int posY) {
