@@ -161,8 +161,14 @@ public class Main extends Application {
             shot.draw();
             for (Bomb bomb : Bombs) {
                 if (shot.colide(bomb) && !bomb.isExploding()) {
-                    score++;
-                    bomb.explode();
+                    bomb.setHealth(bomb.getHealth() - shot.getDamage());
+                    if(bomb.getHealth() <= 0) {
+                        bomb.setDestroyed(true);
+                        score++;
+                        bomb.explode();
+                        bomb.update();
+                        bomb.draw();
+                    }
                     shot.setToRemove(true);
                 }
             }

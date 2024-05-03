@@ -12,8 +12,9 @@ public class Shot implements Drawable, Updatable {
     public boolean toRemove;
     private int posX = 10;
     private int posY = 10;
-    private int speed = 15;
-    public static final int size = 6;
+    private int speed = 10;
+    private int damage = 2;
+    public static int size = 6;
 
     public Shot(int posX, int posY) {
         this.posX = posX;
@@ -74,5 +75,21 @@ public class Shot implements Drawable, Updatable {
 
     public void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }
