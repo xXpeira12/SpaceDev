@@ -42,7 +42,7 @@ public class Rocket implements Drawable, Updatable {
 
     public boolean colide(Rocket other) {
         int d = distance(getPosX() + getSize() / 2, getPosY() + getSize() / 2,
-                other.getPosY() + other.getSize() / 2, other.getPosY() + other.getSize() / 2);
+                other.getPosX() + other.getSize() / 2, other.getPosY() + other.getSize() / 2);
         return d < other.getSize() / 2 + getSize() / 2 ;
     }
 
