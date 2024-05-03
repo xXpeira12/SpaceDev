@@ -1,7 +1,5 @@
 package shot;
 
-import ability.Drawable;
-import ability.Updatable;
 import javafx.scene.paint.Color;
 
 import static application.Main.gc;

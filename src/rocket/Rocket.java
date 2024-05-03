@@ -6,6 +6,7 @@ import shot.BigShot;
 import shot.Shot;
 import javafx.scene.image.Image;
 import shot.SpeedShot;
+import shot.SpreadShot;
 
 import static application.Main.*;
 
@@ -26,9 +27,10 @@ public class Rocket implements Drawable, Updatable {
     }
 
     public Shot shoot() {
-//        return new Shot(this.posX + this.size / 2 - Shot.size / 2, this.posY - Shot.size);
-        return new SpeedShot(this.posX + this.size / 2 - SpeedShot.size / 2, this.posY - SpeedShot.size);
+        return new Shot(this.posX + this.size / 2 - Shot.size / 2, this.posY - Shot.size);
+//        return new SpeedShot(this.posX + this.size / 2 - SpeedShot.size / 2, this.posY - SpeedShot.size);
 //        return new BigShot(this.posX + this.size / 2 - BigShot.size / 2, this.posY - BigShot.size);
+//        return new SpreadShot(this.posX + this.size / 2 - SpeedShot.size / 2, this.posY - SpreadShot.size, 5);
     }
 
     public void update() {
