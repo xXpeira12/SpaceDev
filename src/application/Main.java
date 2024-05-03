@@ -49,6 +49,8 @@ public class Main extends Application {
     List<Bomb> Bombs;
     private double mouseX;
     public static int score;
+    private boolean left, right, shoot, restart;
+    private boolean shotFired;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -58,14 +60,43 @@ public class Main extends Application {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
         canvas.setCursor(Cursor.MOVE);
-        canvas.setOnMouseMoved(e -> mouseX = e.getX());
-        canvas.setOnMouseClicked(e -> {
-            if(shots.size() < MAX_SHOTS) shots.add(player.shoot());
-            if(gameOver) {
-                gameOver = false;
-                setUp();
+        canvas.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case LEFT:
+                    left = true;
+                    break;
+                case RIGHT:
+                    right = true;
+                    break;
+                case SPACE:
+                    shoot = true;
+                    break;
+                case ENTER:
+                    restart = true;
+                    break;
             }
         });
+
+        canvas.setOnKeyReleased(e -> {
+            switch (e.getCode()) {
+                case LEFT:
+                    left = false;
+                    break;
+                case RIGHT:
+                    right = false;
+                    break;
+                case SPACE:
+                    shoot = false;
+                    shotFired = false;
+                    break;
+                case ENTER:
+                    restart = false;
+                    break;
+            }
+        });
+
+        canvas.setFocusTraversable(true);
+        canvas.requestFocus();
         setUp();
         stage.setScene(new Scene(new StackPane(canvas)));
         stage.setTitle("Space");
@@ -91,7 +122,11 @@ public class Main extends Application {
         if (gameOver) {
             gc.setFont(Font.font(35));
             gc.setFill(Color.YELLOW);
-            gc.fillText("Game Over \n Your Score is: " + score + " \n Click to play again", WIDTH / 2, HEIGHT / 2.5);
+            gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again", WIDTH / 2, HEIGHT / 2.5);
+            if (restart) {
+                gameOver = false;
+                setUp();
+            }
             return;
         }
 
@@ -99,7 +134,16 @@ public class Main extends Application {
 
         player.update();
         player.draw();
-        player.setPosX((int) mouseX);
+        if (left) {
+            player.setPosX(player.getPosX() - 5);
+        }
+        if (right) {
+            player.setPosX(player.getPosX() + 5);
+        }
+        if (shoot && !shotFired && shots.size() < MAX_SHOTS) {
+            shots.add(player.shoot());
+            shotFired = true;
+        }
 
         Bombs.stream().peek(Rocket::update).peek(Rocket::draw).forEach(e -> {
             if (player.colide(e) && !player.isExploding()) {
