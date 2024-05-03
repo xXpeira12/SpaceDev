@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import bomb.Bomb;
+import bomb.*;
 import rocket.Rocket;
 import shot.Shot;
 
@@ -108,8 +108,26 @@ public class Main extends Application {
         shots = new ArrayList<>();
         Bombs = new ArrayList<>();
         player = new Rocket(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
-        score = 0;
-        IntStream.range(0, MAX_BOMBS).mapToObj(i -> new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)])).forEach(Bombs::add);
+        score = 48;
+//        IntStream.range(0, MAX_BOMBS).mapToObj(i -> new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)])).forEach(Bombs::add);
+        IntStream.range(0, MAX_BOMBS).forEach(i -> {
+            int bombType = RAND.nextInt(3); // Randomly choose between 0, 1, and 2
+            Bomb bomb;
+            switch (bombType) {
+                case 0:
+                    bomb = new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 5);
+                    break;
+                case 1:
+                    bomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 2);
+                    break;
+                case 2:
+                    bomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 10);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + bombType);
+            }
+            Bombs.add(bomb);
+        });
     }
     private void run(GraphicsContext gc) {
         gc.setFill(Color.grayRgb(20));
@@ -174,13 +192,50 @@ public class Main extends Application {
             }
         }
 
+        Class[] bombTypes = new Class[]{Bomb.class, FastBomb.class, BigBomb.class};
         for (int i = Bombs.size() - 1; i >= 0; i--) {
             if (Bombs.get(i).isDestroyed()) {
-                Bombs.set(i, new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)]));
+                Class bombType = bombTypes[RAND.nextInt(bombTypes.length)];
+                Bomb newBomb;
+                if (bombType == Bomb.class) {
+                    newBomb = new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 5);
+                } else if (bombType == FastBomb.class) {
+                    newBomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 2);
+                } else { // bombType == BigBomb.class
+                    newBomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 10);
+                }
+                Bombs.set(i, newBomb);
             }
         }
 
+        if (score > 50 && score % 20 == 0 && !Bombs.stream().anyMatch(b -> b instanceof BossBomb)) {
+            Bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 20));
+        }
+
         gameOver = player.isDestroyed();
+
+//        for (Bomb bomb : Bombs) {
+//    if (bomb instanceof BossBomb) {
+//        // Cast bomb to BossBomb so we can call BossBomb methods
+//        BossBomb bossBomb = (BossBomb) bomb;
+//
+//        // Call the shoot method
+//       bossBomb.shoot(bossBomb.getShots());
+//
+//        // Update and draw the shot
+//        for (Shot shot : bossBomb.getShots()) {
+//            shot.update();
+//            shot.draw();
+//
+//            // Check for collision with Rocket
+//            if (shot.collide(player)) {
+//                gameOver = true; // Assuming you have a gameOver variable to end the game
+//                return; // End the game immediately
+//            }
+//        }
+//    }
+//}
+
         if (RAND.nextInt(10) > 2) {
             univ.add(new Universe());
         }

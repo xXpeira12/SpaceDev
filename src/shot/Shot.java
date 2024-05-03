@@ -14,8 +14,8 @@ public class Shot implements Drawable, Updatable {
     private int posX = 10;
     private int posY = 10;
     private int speed = 10;
-    private int damage = 2;
-    public static int size = 6;
+    private int damage =  2;
+    public static int size = 5;
 
     public Shot(int posX, int posY) {
         this.posX = posX;
@@ -40,6 +40,11 @@ public class Shot implements Drawable, Updatable {
     public boolean colide(Bomb bomb) {
         int distance = distance(getPosX() + size / 2, getPosY() + size / 2, bomb.getPosX() + bomb.getSize() / 2,bomb.getPosY() + bomb.getSize() / 2);
         return distance < bomb.getSize() / 2 + size / 2;
+    }
+
+    public boolean collide(Rocket rocket) {
+        // This is a simple example. You'll need to replace this with your actual collision detection logic.
+        return this.posX == rocket.getPosX() && this.posY == rocket.getPosY();
     }
 
     private int distance(int x1, int y1, int x2, int y2) {

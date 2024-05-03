@@ -18,11 +18,12 @@ public class Bomb implements Drawable, Updatable {
     private int SPEED = (score / 15) + 2;
     private int health = 5;
 
-    public Bomb(int posX, int posY, int size, Image img) {
+    public Bomb(int posX, int posY, int size, Image img, int health) {
         this.posX = posX;
         this.posY = posY;
         this.size = size;
         this.img = img;
+        this.health = health;
     }
 
     public void update() {
