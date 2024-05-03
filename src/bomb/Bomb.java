@@ -1,14 +1,13 @@
-package rocket;
+package bomb;
 
 import ability.Drawable;
 import ability.Updatable;
-import bomb.Bomb;
-import shot.Shot;
 import javafx.scene.image.Image;
+import rocket.Rocket;
 
 import static application.Main.*;
 
-public class Rocket implements Drawable, Updatable {
+public class Bomb implements Drawable, Updatable {
     private int posX;
     private int posY;
     private int size;
@@ -16,20 +15,21 @@ public class Rocket implements Drawable, Updatable {
     private boolean destroyed;
     private Image img;
     private int explosionsStep = 0;
-    public Rocket(int posX, int posY, int size, Image image) {
+    private int SPEED = (score / 15) + 2;
+    private int health = 5;
+
+    public Bomb(int posX, int posY, int size, Image img) {
         this.posX = posX;
         this.posY = posY;
         this.size = size;
-        this.img = image;
-    }
-
-    public Shot shoot() {
-        return new Shot(this.posX + this.size / 2 - Shot.size / 2, this.posY - Shot.size);
+        this.img = img;
     }
 
     public void update() {
         if(isExploding()) setExplosionsStep(getExplosionsStep() + 1);
         setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
+        if(!isExploding() && !isDestroyed()) setPosY(getPosY() + this.SPEED);
+        if(getPosY() > HEIGHT) setDestroyed(true);
     }
 
     public void draw() {
@@ -40,7 +40,9 @@ public class Rocket implements Drawable, Updatable {
         }
     }
 
-    public boolean colide(Bomb other) {
+
+
+    public boolean colide(Rocket other) {
         int d = distance(getPosX() + getSize() / 2, getPosY() + getSize() / 2,
                 other.getPosX() + other.getSize() / 2, other.getPosY() + other.getSize() / 2);
         return d < other.getSize() / 2 + getSize() / 2 ;
@@ -109,5 +111,12 @@ public class Rocket implements Drawable, Updatable {
 
     public void setExplosionsStep(int explosionsStep) {
         this.explosionsStep = explosionsStep;
+    }
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 }

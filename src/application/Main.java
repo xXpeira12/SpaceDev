@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import rocket.Bomb;
+import bomb.Bomb;
 import rocket.Rocket;
 import shot.Shot;
 
@@ -145,7 +145,7 @@ public class Main extends Application {
             shotFired = true;
         }
 
-        Bombs.stream().peek(Rocket::update).peek(Rocket::draw).forEach(e -> {
+        Bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
             if (player.colide(e) && !player.isExploding()) {
                 player.explode();
             }

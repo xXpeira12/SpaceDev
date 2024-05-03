@@ -4,6 +4,7 @@ import ability.Drawable;
 import ability.Updatable;
 import javafx.scene.paint.Color;
 import rocket.Rocket;
+import bomb.Bomb;
 
 import static application.Main.gc;
 import static application.Main.score;
@@ -36,9 +37,9 @@ public class Shot implements Drawable, Updatable {
         }
     }
 
-    public boolean colide(Rocket rocket) {
-        int distance = distance(getPosX() + size / 2, getPosY() + size / 2, rocket.getPosX() + rocket.getSize() / 2, rocket.getPosY() + rocket.getSize() / 2);
-        return distance < rocket.getSize() / 2 + size / 2;
+    public boolean colide(Bomb bomb) {
+        int distance = distance(getPosX() + size / 2, getPosY() + size / 2, bomb.getPosX() + bomb.getSize() / 2,bomb.getPosY() + bomb.getSize() / 2);
+        return distance < bomb.getSize() / 2 + size / 2;
     }
 
     private int distance(int x1, int y1, int x2, int y2) {
