@@ -27,13 +27,7 @@ public class Shot implements Drawable, Updatable {
 
     public void draw() {
         gc.setFill(Color.RED);
-        if(score >= 50 && score <= 70 || score >= 120) {
-            gc.setFill(Color.YELLOWGREEN);
-            setSpeed(50);
-            gc.fillRect(getPosX() - 5, getPosY() - 10, size + 10, size + 30);
-        } else {
-            gc.fillOval(getPosX(), getPosY(), size, size);
-        }
+        gc.fillOval(getPosX(), getPosY(), size, size);
     }
 
     public boolean colide(Rocket rocket) {
