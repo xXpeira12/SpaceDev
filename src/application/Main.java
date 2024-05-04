@@ -244,10 +244,10 @@ public class Main extends Application {
 
         gameOver = player.isDestroyed();
 
-//        for (Bomb bomb : Bombs) {
-//    if (bomb instanceof BossBomb) {
-//        // Cast bomb to BossBomb so we can call BossBomb methods
-//        BossBomb bossBomb = (BossBomb) bomb;
+//        for (Bomb entity.bomb : Bombs) {
+//    if (entity.bomb instanceof BossBomb) {
+//        // Cast entity.bomb to BossBomb so we can call BossBomb methods
+//        BossBomb bossBomb = (BossBomb) entity.bomb;
 //
 //        // Call the shoot method
 //       bossBomb.shoot(bossBomb.getShots());
