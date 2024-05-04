@@ -12,6 +12,7 @@ import static application.Main.*;
 public class Rocket extends Entity implements Drawable, Updatable {
     private int explosionsStep = 0;
     private RocketStatus status = RocketStatus.NORMAL;
+    private int powerUpTimer = 0;
 
     public Rocket(int posX, int posY, int size, Image image) {
         super(posX, posY, size, image);
@@ -21,16 +22,26 @@ public class Rocket extends Entity implements Drawable, Updatable {
         if (status == RocketStatus.NORMAL) {
             return new BaseShot(this.posX + this.size / 2 - BASE_SHOT_SIZE / 2, this.posY - BASE_SHOT_SIZE);
         } else if (status == RocketStatus.BIG) {
-//            return new BigShot(this.posX + this.size / 2 - BIG_SHOT_SIZE / 2, this.posY - BIG_SHOT_SIZE);
-//            return new SpeedShot(this.posX + this.size / 2 - SPEED_SHOT_SIZE / 2, this.posY - SPEED_SHOT_SIZE);
+            return new BigShot(this.posX + this.size / 2 - BIG_SHOT_SIZE / 2, this.posY - BIG_SHOT_SIZE);
+        } else if (status == RocketStatus.SPEED) {
+            return new SpeedShot(this.posX + this.size / 2 - SPEED_SHOT_SIZE / 2, this.posY - SPEED_SHOT_SIZE);
+        } else {
             return new SpreadShot(this.posX + this.size / 2 - SPEED_SHOT_SIZE / 2, this.posY - SPEED_SHOT_SIZE, 4, 20);
-        } else return null;
+        }
     }
 
     @Override
     public void update() {
         if (isExploding()) setExplosionsStep(getExplosionsStep() + 1);
         setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
+
+        if (status != RocketStatus.NORMAL) {
+            powerUpTimer++;
+            if (powerUpTimer >= POWER_UP_DURATION) {
+                status = RocketStatus.NORMAL;
+                powerUpTimer = 0;
+            }
+        }
     }
 
     @Override
@@ -66,13 +77,19 @@ public class Rocket extends Entity implements Drawable, Updatable {
     }
 
     public enum RocketStatus {
-        NORMAL,
         SPEED,
         BIG,
-        SPREAD
+        SPREAD,
+        NORMAL
     }
 
     public void setStatus(RocketStatus status) {
         this.status = status;
+        powerUpTimer = 0;
     }
+
+    public RocketStatus getStatus() {
+        return status;
+    }
+
 }

@@ -4,7 +4,7 @@ import ability.Drawable;
 import ability.Updatable;
 import javafx.scene.image.Image;
 
-public abstract class Entity implements Drawable{
+public abstract class Entity implements Drawable {
     protected int posX;
     protected int posY;
     protected int size;
@@ -19,12 +19,10 @@ public abstract class Entity implements Drawable{
         this.img = image;
     }
 
-    public void update(){};
+    public abstract void update();
 
-    public void draw(){};
-
-    public void collide(Entity other){};
-
+    public abstract void draw();
+    
     public int getPosX() {
         return posX;
     }
