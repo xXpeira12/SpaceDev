@@ -124,27 +124,60 @@ public class Main extends Application {
     }
 
     private void run(GraphicsContext gc) {
+        clearScreen(gc);
+        displayScore(gc);
+        displayCurrentGun(gc);
+
+        if (gameOver) {
+            displayGameOver(gc);
+            return;
+        }
+
+        drawUniverse();
+        updatePlayer();
+        handlePlayerShooting();
+        checkCollisions();
+        updateBombs();
+        updateItems();
+        spawnBossBomb();
+        updateBossBombShots();
+
+        gameOver = player.isDestroyed();
+        spawnUniverse();
+        removeOffscreenUniverse();
+    }
+
+    private void clearScreen(GraphicsContext gc) {
         gc.setFill(Color.grayRgb(20));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
+    }
+
+    private void displayScore(GraphicsContext gc) {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setFont(Font.font(20));
         gc.setFill(Color.WHITE);
         gc.fillText("Score: " + score, 60, 20);
+    }
+
+    private void displayCurrentGun(GraphicsContext gc) {
         gc.fillText("Current Gun: " + player.getStatus(), WIDTH / 2.0, 20);
+    }
 
-        if (gameOver) {
-            gc.setFont(Font.font(35));
-            gc.setFill(Color.YELLOW);
-            gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again", WIDTH / 2.0, HEIGHT / 2.5);
-            if (restart) {
-                gameOver = false;
-                setUp();
-            }
-            return;
+    private void displayGameOver(GraphicsContext gc) {
+        gc.setFont(Font.font(35));
+        gc.setFill(Color.YELLOW);
+        gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again", WIDTH / 2.0, HEIGHT / 2.5);
+        if (restart) {
+            gameOver = false;
+            setUp();
         }
+    }
 
+    private void drawUniverse() {
         univ.forEach(Universe::draw);
+    }
 
+    private void updatePlayer() {
         player.update();
         player.draw();
         if (left) {
@@ -153,6 +186,9 @@ public class Main extends Application {
         if (right) {
             player.setPosX(player.getPosX() + 5);
         }
+    }
+
+    private void handlePlayerShooting() {
         if (shoot && !shotFired && shots.size() < MAX_SHOTS) {
             if (player.shoot() instanceof SpreadShot) {
                 Collections.addAll(shots, new SpreadShot(player.shoot().getPosX(), player.shoot().getPosY(), ((SpreadShot) player.shoot()).getNumShots(), ((SpreadShot) player.shoot()).getSpaceBetweenShot()).getShots());
@@ -161,7 +197,9 @@ public class Main extends Application {
             }
             shotFired = true;
         }
+    }
 
+    private void checkCollisions() {
         bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
             if (player.collide(e) && !player.isExploding()) {
                 player.explode();
@@ -194,7 +232,9 @@ public class Main extends Application {
                 }
             }
         }
+    }
 
+    private void updateBombs() {
         Class[] bombTypes = new Class[]{Bomb.class, FastBomb.class, BigBomb.class};
         for (int i = bombs.size() - 1; i >= 0; i--) {
             if (bombs.get(i).isDestroyed()) {
@@ -210,6 +250,9 @@ public class Main extends Application {
                 bombs.set(i, newBomb);
             }
         }
+    }
+
+    private void updateItems() {
         items.forEach(item -> {
             item.update();
             item.draw();
@@ -221,53 +264,52 @@ public class Main extends Application {
                 gc.setFill(Color.WHITE);
                 gc.fillText("Item Collected", item.getPosX(), item.getPosY());
             }
+        }
+    }
 
-            if (score >= 50 && score % 10 == 0 && bombs.stream().noneMatch((b -> b instanceof BossBomb))) {
-                bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[3], 20));
-            }
+    private void spawnBossBomb() {
+        if (score >= 50 && score % 10 == 0 && bombs.stream().noneMatch((b -> b instanceof BossBomb))) {
+            bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[3], 20));
+        }
+    }
 
-            counter++;
-            if (counter >= 60) {
-                for (Bomb bomb : bombs) {
-                    if (bomb instanceof BossBomb bossBomb) {
-                        bossBomb.shot();
-                        counter = 0;
-                    }
-                }
-            }
-
+    private void updateBossBombShots() {
+        counter++;
+        if (counter >= 60) {
             for (Bomb bomb : bombs) {
                 if (bomb instanceof BossBomb bossBomb) {
-                    // Update and draw the shot
-                    for (BaseShot shot : bossBomb.getShots()) {
-                        shot.updateBombShot();
-                        shot.drawBombShot();
-
-                        // Check for collision with Player
-                        if (shot.collide(player)) {
-                            player.explode();
-                        }
-                        gameOver = player.isDestroyed();
-                        if (gameOver) {
-                            gc.setFont(Font.font(35));
-                            gc.setFill(Color.YELLOW);
-                            gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again", WIDTH / 2, HEIGHT / 2.5);
-                            if (restart) {
-                                gameOver = false;
-                                setUp();
-                            }
-                            return;
-                        }
-                    }
+                    bossBomb.shot();
+                    counter = 0;
                 }
             }
         }
 
-        gameOver = player.isDestroyed();
+        for (Bomb bomb : bombs) {
+            if (bomb instanceof BossBomb bossBomb) {
+                for (BaseShot shot : bossBomb.getShots()) {
+                    shot.updateBombShot();
+                    shot.drawBombShot();
 
+                    if (shot.collide(player)) {
+                        player.explode();
+                    }
+                    gameOver = player.isDestroyed();
+                    if (gameOver) {
+                        displayGameOver(gc);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void spawnUniverse() {
         if (RAND.nextInt(10) > 2) {
             univ.add(new Universe());
         }
+    }
+
+    private void removeOffscreenUniverse() {
         for (int i = 0; i < univ.size(); i++) {
             if (univ.get(i).getPosY() > HEIGHT) {
                 univ.remove(i);
