@@ -1,6 +1,10 @@
 package application;
 
 import entity.Item.DropItem;
+import entity.bomb.BigBomb;
+import entity.bomb.Bomb;
+import entity.bomb.BossBomb;
+import entity.bomb.FastBomb;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -15,10 +19,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import entity.rocket.Bomb;
 import entity.rocket.Rocket;
-import shot.Shot;
-import shot.SpreadShot;
+import entity.shot.Shot;
+import entity.shot.SpreadShot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +40,11 @@ public class Main extends Application {
     public static final int EXPLOSION_COLS = 3;
     public static final int EXPLOSION_H = 128;
     public static final int EXPLOSION_STEPS = 15;
-    public static final Image BOMBS_IMG[] = {
-      new Image("file:assets/1.png"),
-      new Image("file:assets/2.png")
-    };
+    public static final int INITIAL_SCORE = 25;
+    public static final int BASE_SHOT_SIZE = 6;
+    public static final int BIG_SHOT_SIZE = 9;
+    public static final int SPEED_SHOT_SIZE = 4;
+    public static final Image BOMBS_IMG[] = {new Image("file:assets/1.png"), new Image("file:assets/2.png"), new Image("file:assets/3.png"), new Image("file:assets/4.png")};
     final int MAX_BOMBS = 6;
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
@@ -51,7 +55,7 @@ public class Main extends Application {
     List<Bomb> Bombs;
     List<DropItem> dropItems;
     private double mouseX;
-    public static int score;
+    public static int score = INITIAL_SCORE;
     private boolean left, right, shoot, restart;
     private boolean shotFired;
 
@@ -112,9 +116,26 @@ public class Main extends Application {
         Bombs = new ArrayList<>();
         dropItems = new ArrayList<>();
         player = new Rocket(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
-        score = 0;
-        IntStream.range(0, MAX_BOMBS).mapToObj(i -> new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)])).forEach(Bombs::add);
+        IntStream.range(0, MAX_BOMBS).forEach(i -> {
+            int bombType = RAND.nextInt(3); // Randomly choose between 0, 1, and 2
+            Bomb bomb;
+            switch (bombType) {
+                case 0:
+                    bomb = new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[0], 5);
+                    break;
+                case 1:
+                    bomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[1], 2);
+                    break;
+                case 2:
+                    bomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[2], 10);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + bombType);
+            }
+            Bombs.add(bomb);
+        });
     }
+
     private void run(GraphicsContext gc) {
         gc.setFill(Color.grayRgb(20));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
@@ -145,17 +166,17 @@ public class Main extends Application {
             player.setPosX(player.getPosX() + 5);
         }
         if (shoot && !shotFired && shots.size() < MAX_SHOTS) {
-            if(player.shoot() instanceof SpreadShot) {
-              for(Shot eachShot : new SpreadShot(player.shoot().getPosX(), player.shoot().getPosY(), ((SpreadShot) player.shoot()).getNumShots(), ((SpreadShot) player.shoot()).getSpaceBetweenShot()).getShots()) {
-                  shots.add(eachShot);
-              }
+            if (player.shoot() instanceof SpreadShot) {
+                for (Shot eachShot : new SpreadShot(player.shoot().getPosX(), player.shoot().getPosY(), ((SpreadShot) player.shoot()).getNumShots(), ((SpreadShot) player.shoot()).getSpaceBetweenShot()).getShots()) {
+                    shots.add(eachShot);
+                }
             } else {
                 shots.add(player.shoot());
             }
             shotFired = true;
         }
 
-        Bombs.stream().peek(Rocket::update).peek(Rocket::draw).forEach(e -> {
+        Bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
             if (player.colide(e) && !player.isExploding()) {
                 player.explode();
             }
@@ -171,8 +192,8 @@ public class Main extends Application {
             shot.draw();
             for (Bomb bomb : Bombs) {
                 if (shot.colide(bomb) && !bomb.isExploding()) {
-                    bomb.setHealth(bomb.getHealth() - shot.getDamage());
-                    if(bomb.getHealth() <= 0) {
+                    shot.dealDamage(bomb);
+                    if (bomb.getHealth() <= 0) {
                         bomb.setDestroyed(true);
                         score++;
                         bomb.explode();
@@ -187,9 +208,19 @@ public class Main extends Application {
             }
         }
 
+        Class[] bombTypes = new Class[]{Bomb.class, FastBomb.class, BigBomb.class};
         for (int i = Bombs.size() - 1; i >= 0; i--) {
             if (Bombs.get(i).isDestroyed()) {
-                Bombs.set(i, new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)]));
+                Class bombType = bombTypes[RAND.nextInt(bombTypes.length)];
+                Bomb newBomb;
+                if (bombType == Bomb.class) {
+                    newBomb = new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[0], 5);
+                } else if (bombType == FastBomb.class) {
+                    newBomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[1], 2);
+                } else { // bombType == BigBomb.class
+                    newBomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[2], 10);
+                }
+                Bombs.set(i, newBomb);
             }
         }
         dropItems.forEach(item -> {
@@ -205,7 +236,34 @@ public class Main extends Application {
             }
         }
 
+        if (score >= 50 && score % 10 == 0 && Bombs.stream().noneMatch((b -> b instanceof BossBomb))) {
+            Bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[3], 20));
+        }
+
         gameOver = player.isDestroyed();
+
+//        for (Bomb bomb : Bombs) {
+//    if (bomb instanceof BossBomb) {
+//        // Cast bomb to BossBomb so we can call BossBomb methods
+//        BossBomb bossBomb = (BossBomb) bomb;
+//
+//        // Call the shoot method
+//       bossBomb.shoot(bossBomb.getShots());
+//
+//        // Update and draw the shot
+//        for (Shot shot : bossBomb.getShots()) {
+//            shot.update();
+//            shot.draw();
+//
+//            // Check for collision with Rocket
+//            if (shot.collide(player)) {
+//                gameOver = true; // Assuming you have a gameOver variable to end the game
+//                return; // End the game immediately
+//            }
+//        }
+//    }
+//}
+
         if (RAND.nextInt(10) > 2) {
             univ.add(new Universe());
         }
