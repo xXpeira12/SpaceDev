@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import static application.Main.gc;
 
 public abstract class Shot extends Entity {
-    private boolean toRemove;
+    private boolean isRemove;
     private int speed;
     private int damage;
 
@@ -23,12 +23,12 @@ public abstract class Shot extends Entity {
 
     public abstract void dealDamage(Bomb bomb);
 
-    public boolean isToRemove() {
-        return toRemove;
+    public boolean isRemove() {
+        return isRemove;
     }
 
-    public void setToRemove(boolean toRemove) {
-        this.toRemove = toRemove;
+    public void setIsRemove(boolean isRemove) {
+        this.isRemove = isRemove;
     }
 
     public int getSpeed() {

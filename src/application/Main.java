@@ -170,7 +170,7 @@ public class Main extends Application {
 
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
-            if (shot.getPosY() < 0 || shot.isToRemove()) {
+            if (shot.getPosY() < 0 || shot.isRemove()) {
                 shots.remove(i);
                 continue;
             }
@@ -190,7 +190,7 @@ public class Main extends Application {
                             items.add(new BoostShotItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, randomDropItem));
                         }
                     }
-                    shot.setToRemove(true);
+                    shot.setIsRemove(true);
                 }
             }
         }
