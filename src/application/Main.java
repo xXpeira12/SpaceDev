@@ -59,6 +59,7 @@ public class Main extends Application {
     public static int score;
     private boolean left, right, shoot, restart;
     private boolean shotFired;
+    int counter = 0;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -237,35 +238,53 @@ public class Main extends Application {
                 gc.setFill(Color.WHITE);
                 gc.fillText("Item Collected", item.getPosX(), item.getPosY());
             }
-        }
 
-        if (score >= 50 && score % 10 == 0 && Bombs.stream().noneMatch((b -> b instanceof BossBomb))) {
-            Bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[3], 20));
-        }
+            if (score >= 50 && score % 10 == 0 && Bombs.stream().noneMatch((b -> b instanceof BossBomb))) {
+                Bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[3], 20));
+            }
 
-        gameOver = player.isDestroyed();
+            counter++;
+            if (counter >= 60) { // Adjust this value based on your game's frame rate
+                for (Bomb bomb : Bombs) {
+                    if (bomb instanceof BossBomb) {
+                        BossBomb bossBomb = (BossBomb) bomb;
+                        bossBomb.shoot();
+                        counter = 0; // Reset the counter
+                    }
+                }
+            }
 
-        for (Bomb bomb : Bombs) {
-            if (bomb instanceof BossBomb) {
-                // Cast bomb to BossBomb so we can call BossBomb methods
-                BossBomb bossBomb = (BossBomb) bomb;
+            for (Bomb bomb : Bombs) {
+                if (bomb instanceof BossBomb) {
+                    // Cast bomb to BossBomb so we can call BossBomb methods
+                    BossBomb bossBomb = (BossBomb) bomb;
 
-                // Call the shoot method
-                bossBomb.shoot();
+                    // Update and draw the shot
+                    for (BaseShot shot : bossBomb.getShots()) {
+                        shot.updateBombShot();
+                        shot.drawBombShot(); // You need to implement this method in the BaseShot class
 
-                // Update and draw the shot
-                for (BaseShot shot : bossBomb.getShots()) {
-                    shot.updateBombShot();
-                    shot.drawBombShot(); // You need to implement this method in the BaseShot class
-
-                    // Check for collision with Player
-                    if (shot.collide(player)) {
-                        gameOver = true; // Assuming you have a gameOver variable to end the game
-                        return; // End the game immediately
+                        // Check for collision with Player
+                        if (shot.collide(player)) {
+                            player.explode();
+                        }
+                        gameOver = player.isDestroyed();
+                        if (gameOver) {
+                            gc.setFont(Font.font(35));
+                            gc.setFill(Color.YELLOW);
+                            gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again", WIDTH / 2, HEIGHT / 2.5);
+                            if (restart) {
+                                gameOver = false;
+                                setUp();
+                            }
+                            return;
+                        }
                     }
                 }
             }
         }
+
+        gameOver = player.isDestroyed();
 
         if (RAND.nextInt(10) > 2) {
             univ.add(new Universe());

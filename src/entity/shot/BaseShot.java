@@ -33,7 +33,7 @@ public class BaseShot extends Shot {
     }
 
     public void drawBombShot() {
-        gc.setFill(Color.PURPLE);
+        gc.setFill(Color.YELLOW);
         gc.fillOval(getPosX() + 30, getPosY() + 30, getSize(), getSize());
     }
 
