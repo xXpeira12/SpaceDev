@@ -55,7 +55,7 @@ public class Main extends Application {
     List<Bomb> Bombs;
     List<DropItem> dropItems;
     private double mouseX;
-    public static int score = INITIAL_SCORE;
+    public static int score;
     private boolean left, right, shoot, restart;
     private boolean shotFired;
 
@@ -111,6 +111,7 @@ public class Main extends Application {
     }
 
     private void setUp() {
+        score = INITIAL_SCORE;
         univ = new ArrayList<>();
         shots = new ArrayList<>();
         Bombs = new ArrayList<>();
