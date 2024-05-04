@@ -3,10 +3,9 @@ package shot;
 import ability.Drawable;
 import ability.Updatable;
 import javafx.scene.paint.Color;
-import rocket.Rocket;
+import entity.rocket.Rocket;
 
 import static application.Main.gc;
-import static application.Main.score;
 
 public class Shot implements Drawable, Updatable {
     public boolean toRemove;

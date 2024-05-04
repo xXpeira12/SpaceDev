@@ -1,4 +1,4 @@
-package rocket;
+package entity.rocket;
 
 import ability.Updatable;
 import javafx.scene.image.Image;

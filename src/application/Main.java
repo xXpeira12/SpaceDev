@@ -14,8 +14,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import rocket.Bomb;
-import rocket.Rocket;
+import entity.rocket.Bomb;
+import entity.rocket.Rocket;
 import shot.Shot;
 import shot.SpreadShot;
 
