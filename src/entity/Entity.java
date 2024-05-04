@@ -23,6 +23,8 @@ public abstract class Entity implements Drawable{
 
     public void draw(){};
 
+    public void collide(Entity other){};
+
     public int getPosX() {
         return posX;
     }

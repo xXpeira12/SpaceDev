@@ -1,5 +1,6 @@
 package application;
 
+import entity.Item.DropItem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -44,10 +45,11 @@ public class Main extends Application {
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
     public static GraphicsContext gc;
-    Rocket player;
+    public static Rocket player;
     List<Shot> shots;
     List<Universe> univ;
     List<Bomb> Bombs;
+    List<DropItem> dropItems;
     private double mouseX;
     public static int score;
     private boolean left, right, shoot, restart;
@@ -108,6 +110,7 @@ public class Main extends Application {
         univ = new ArrayList<>();
         shots = new ArrayList<>();
         Bombs = new ArrayList<>();
+        dropItems = new ArrayList<>();
         player = new Rocket(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
         score = 0;
         IntStream.range(0, MAX_BOMBS).mapToObj(i -> new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)])).forEach(Bombs::add);
@@ -175,6 +178,9 @@ public class Main extends Application {
                         bomb.explode();
                         bomb.update();
                         bomb.draw();
+                        if (RAND.nextInt(10) < 3) { // Adjust the probability as needed
+                            dropItems.add(new DropItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, new Image("file:assets/drop_item.png")));
+                        }
                     }
                     shot.setToRemove(true);
                 }
@@ -184,6 +190,18 @@ public class Main extends Application {
         for (int i = Bombs.size() - 1; i >= 0; i--) {
             if (Bombs.get(i).isDestroyed()) {
                 Bombs.set(i, new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)]));
+            }
+        }
+        dropItems.forEach(item -> {
+            item.update();
+            item.draw();
+        });
+        for (int i = dropItems.size() - 1; i >= 0; i--) {
+            DropItem item = dropItems.get(i);
+            if (item.collide(player)) {
+                dropItems.remove(i);
+                gc.setFill(Color.WHITE);
+                gc.fillText("Item Collected", item.getPosX(), item.getPosY());
             }
         }
 
