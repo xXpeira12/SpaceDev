@@ -1,10 +1,12 @@
 package entity.shot;
 
+import static config.Config.*;
+
 public class SpeedShot extends BaseShot {
     public SpeedShot(int posX, int posY) {
         super(posX, posY);
-        setSpeed(20);
-        setSize(4);
-        setDamage(1);
+        setSpeed(SPEEDSHOT_SPEED);
+        setSize(SPEEDSHOT_SIZE);
+        setDamage(SPEEDSHOT_DAMAGE);
     }
 }
