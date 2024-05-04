@@ -1,5 +1,6 @@
 package application;
 
+import entity.Item.BoostShotItem;
 import entity.Item.DropItem;
 import entity.bomb.BigBomb;
 import entity.bomb.Bomb;
@@ -46,6 +47,7 @@ public class Main extends Application {
     public static final int SPEED_SHOT_SIZE = 4;
     public static final int POWER_UP_DURATION = 3 * 60;
     public static final Image BOMBS_IMG[] = {new Image("file:assets/1.png"), new Image("file:assets/2.png"), new Image("file:assets/3.png"), new Image("file:assets/4.png")};
+    public static final Image BoostShot_IMG[] = {new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png")};
     final int MAX_BOMBS = 6;
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
@@ -202,8 +204,9 @@ public class Main extends Application {
                         bomb.explode();
                         bomb.update();
                         bomb.draw();
-                        if (RAND.nextInt(10) < 3) { // Adjust the probability as needed
-                            dropItems.add(new DropItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, new Image("file:assets/drop_item.png")));
+                        int randomDropItem = RAND.nextInt(10);
+                        if (randomDropItem < 3) {
+                            dropItems.add(new BoostShotItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, randomDropItem));
                         }
                     }
                     shot.setToRemove(true);
