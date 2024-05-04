@@ -1,7 +1,7 @@
 package bomb;
 
 import javafx.scene.image.Image;
-import shot.Shot;
+import entity.shot.Shot;
 
 import java.util.ArrayList;
 import java.util.List;
