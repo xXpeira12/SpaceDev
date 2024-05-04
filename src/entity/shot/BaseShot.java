@@ -2,7 +2,6 @@ package entity.shot;
 
 import entity.bomb.Bomb;
 import entity.rocket.Rocket;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static application.Main.BASE_SHOT_SIZE;
