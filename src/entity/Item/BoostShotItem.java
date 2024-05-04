@@ -1,26 +1,15 @@
 package entity.Item;
 
-import ability.Drawable;
 import entity.rocket.Rocket;
 
 import static application.Main.*;
 
-public class BoostShotItem extends Item implements Drawable {
+public class BoostShotItem extends Item {
     private final Rocket.RocketStatus STATUS;
 
     public BoostShotItem(int posX, int posY, int size, int type) {
         super(posX, posY, size, BoostShot_IMG[type]);
         STATUS = Rocket.RocketStatus.values()[type];
-    }
-
-    @Override
-    public void update() {
-        super.update();
-    }
-
-    @Override
-    public void draw() {
-        super.draw();
     }
 
     @Override

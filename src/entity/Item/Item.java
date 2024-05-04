@@ -1,13 +1,12 @@
 package entity.Item;
 
-import ability.Drawable;
 import entity.Entity;
 import entity.rocket.Rocket;
 import javafx.scene.image.Image;
 
 import static application.Main.*;
 
-public abstract class Item extends Entity implements Drawable {
+public abstract class Item extends Entity {
     public Item(int posX, int posY, int size, Image image) {
         super(posX, posY, size, image);
     }
@@ -25,9 +24,5 @@ public abstract class Item extends Entity implements Drawable {
         }
     }
 
-    abstract public boolean collide(Rocket rocket);
-
-    public int distance(int x1, int y1, int x2, int y2) {
-        return (int) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-    }
+    public abstract boolean collide(Rocket rocket);
 }

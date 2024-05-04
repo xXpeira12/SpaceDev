@@ -1,7 +1,5 @@
 package entity.shot;
 
-import ability.Drawable;
-import ability.Updatable;
 import entity.bomb.Bomb;
 import entity.Entity;
 import entity.rocket.Rocket;
@@ -10,10 +8,10 @@ import javafx.scene.paint.Color;
 
 import static application.Main.gc;
 
-public abstract class Shot extends Entity implements Drawable, Updatable {
-    protected boolean toRemove;
-    protected int speed;
-    protected int damage;
+public abstract class Shot extends Entity {
+    private boolean toRemove;
+    private int speed;
+    private int damage;
 
     public Shot(int posX, int posY, int size, Image image) {
         super(posX, posY, size, image);
@@ -29,16 +27,13 @@ public abstract class Shot extends Entity implements Drawable, Updatable {
         return toRemove;
     }
 
-
     public void setToRemove(boolean toRemove) {
         this.toRemove = toRemove;
     }
 
-
     public int getSpeed() {
         return speed;
     }
-
 
     public void setSpeed(int speed) {
         this.speed = speed;
@@ -47,7 +42,6 @@ public abstract class Shot extends Entity implements Drawable, Updatable {
     public int getDamage() {
         return damage;
     }
-
 
     public void setDamage(int damage) {
         this.damage = damage;

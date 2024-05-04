@@ -2,6 +2,8 @@ package entity;
 
 import ability.Drawable;
 import ability.Updatable;
+import entity.bomb.Bomb;
+import entity.rocket.Rocket;
 import javafx.scene.image.Image;
 
 public abstract class Entity implements Drawable, Updatable {
@@ -69,5 +71,9 @@ public abstract class Entity implements Drawable, Updatable {
 
     public void setImg(Image img) {
         this.img = img;
+    }
+
+    public int distance(int x1, int y1, int x2, int y2) {
+        return (int) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
     }
 }

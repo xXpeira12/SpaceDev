@@ -4,15 +4,14 @@ import entity.bomb.Bomb;
 import entity.rocket.Rocket;
 import javafx.scene.paint.Color;
 
-import static application.Main.BASE_SHOT_SIZE;
 import static application.Main.gc;
+import static config.Config.*;
 
 public class BaseShot extends Shot {
     public BaseShot(int posX, int posY) {
-        super(posX, posY, BASE_SHOT_SIZE, null);
-        setSpeed(10);
-        setDamage(2);
-        setSize(6);
+        super(posX, posY, BASESHOT_SIZE, null);
+        setSpeed(BASESHOT_SPEED);
+        setDamage(BASESHOT_DAMAGE);
     }
 
     @Override
@@ -27,17 +26,13 @@ public class BaseShot extends Shot {
         return distance < rocket.getSize() / 2 + getSize() / 2;
     }
 
-    private int distance(int x1, int y1, int x2, int y2) {
-        return (int) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-    }
-
     public void drawBombShot() {
         gc.setFill(Color.YELLOW);
-        gc.fillOval(getPosX() + 30, getPosY() + 30, getSize(), getSize());
+        gc.fillOval(getPosX() + PADDING_BOMB, getPosY() + PADDING_BOMB, getSize(), getSize());
     }
 
     public void updateBombShot() {
-        setPosY(getPosY() + getSpeed() + 4);
+        setPosY(getPosY() + getSpeed() + BOSS_SHOT_SPEED);
     }
 
     @Override
