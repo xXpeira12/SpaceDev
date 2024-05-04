@@ -4,6 +4,7 @@ import ability.Drawable;
 import ability.Updatable;
 import entity.bomb.Bomb;
 import entity.Entity;
+import entity.rocket.Rocket;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 

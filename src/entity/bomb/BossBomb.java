@@ -1,5 +1,7 @@
 package entity.bomb;
 
+import entity.rocket.Rocket;
+import entity.shot.BaseShot;
 import javafx.scene.image.Image;
 import entity.shot.Shot;
 
@@ -12,12 +14,10 @@ public class BossBomb extends Bomb {
 
     private int speed = (score / 50) + 2;
     private long lastShotTime;
-    private List<Shot> shots;
+    private List<BaseShot> shots = new ArrayList<>();
 
     public BossBomb(int posX, int posY, int size, Image img, int health) {
         super(posX, posY, size, img, health);
-        lastShotTime = System.nanoTime();
-        this.shots = new ArrayList<>();
     }
 
     public void update() {
@@ -34,20 +34,14 @@ public class BossBomb extends Bomb {
         this.speed = speed;
     }
 
-//    public void shoot(List<Shot> shots) {
-//        long now = System.nanoTime();
-//        if (now - lastShotTime < 500_000_000) { // 500_000_000 nanoseconds = 0.5 seconds
-//            return;
-//        }
-//
-//        // Create a new shot and add it to the shots list
-//        Shot shot = new Shot(getPosX(), getPosY());
-//        shots.add(shot);
-//
-//        lastShotTime = now;
-//    }
-//
-//    public List<Shot> getShots() {
-//        return this.shots;
-//    }
+    public List<BaseShot> getShots() {
+        return shots;
+    }
+
+    public void shoot() {
+        // Create and add a new BaseShot to shots
+        shots.add(new BaseShot(this.getPosX(), this.getPosY()));
+    }
+
+
 }
