@@ -1,8 +1,4 @@
-package shot;
-
-import javafx.scene.paint.Color;
-
-import static application.Main.gc;
+package entity.shot;
 
 public class SpeedShot extends BaseShot {
     public SpeedShot(int posX, int posY) {

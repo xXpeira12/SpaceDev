@@ -3,7 +3,7 @@ package bomb;
 import ability.Drawable;
 import ability.Updatable;
 import javafx.scene.image.Image;
-import rocket.Rocket;
+import entity.rocket.Rocket;
 
 import static application.Main.*;
 

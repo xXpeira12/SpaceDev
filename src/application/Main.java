@@ -1,9 +1,10 @@
 package application;
 
-import bomb.BigBomb;
-import bomb.Bomb;
-import bomb.BossBomb;
-import bomb.FastBomb;
+import entity.Item.DropItem;
+import entity.bomb.BigBomb;
+import entity.bomb.Bomb;
+import entity.bomb.BossBomb;
+import entity.bomb.FastBomb;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -18,9 +19,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import rocket.Rocket;
-import shot.Shot;
-import shot.SpreadShot;
+import entity.rocket.Rocket;
+import entity.shot.Shot;
+import entity.shot.SpreadShot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,15 +40,20 @@ public class Main extends Application {
     public static final int EXPLOSION_COLS = 3;
     public static final int EXPLOSION_H = 128;
     public static final int EXPLOSION_STEPS = 15;
+    public static final int INITIAL_SCORE = 25;
+    public static final int BASE_SHOT_SIZE = 6;
+    public static final int BIG_SHOT_SIZE = 9;
+    public static final int SPEED_SHOT_SIZE = 4;
     public static final Image BOMBS_IMG[] = {new Image("file:assets/1.png"), new Image("file:assets/2.png"), new Image("file:assets/3.png"), new Image("file:assets/4.png")};
     final int MAX_BOMBS = 6;
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
     public static GraphicsContext gc;
-    Rocket player;
+    public static Rocket player;
     List<Shot> shots;
     List<Universe> univ;
     List<Bomb> Bombs;
+    List<DropItem> dropItems;
     private double mouseX;
     public static int score;
     private boolean left, right, shoot, restart;
@@ -105,11 +111,13 @@ public class Main extends Application {
     }
 
     private void setUp() {
+        score = INITIAL_SCORE;
         univ = new ArrayList<>();
         shots = new ArrayList<>();
         Bombs = new ArrayList<>();
+        dropItems = new ArrayList<>();
         player = new Rocket(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
-        score = 48;
+        score = INITIAL_SCORE;
         IntStream.range(0, MAX_BOMBS).forEach(i -> {
             int bombType = RAND.nextInt(3); // Randomly choose between 0, 1, and 2
             Bomb bomb;
@@ -193,6 +201,9 @@ public class Main extends Application {
                         bomb.explode();
                         bomb.update();
                         bomb.draw();
+                        if (RAND.nextInt(10) < 3) { // Adjust the probability as needed
+                            dropItems.add(new DropItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, new Image("file:assets/drop_item.png")));
+                        }
                     }
                     shot.setToRemove(true);
                 }
@@ -212,6 +223,18 @@ public class Main extends Application {
                     newBomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[2], 10);
                 }
                 Bombs.set(i, newBomb);
+            }
+        }
+        dropItems.forEach(item -> {
+            item.update();
+            item.draw();
+        });
+        for (int i = dropItems.size() - 1; i >= 0; i--) {
+            DropItem item = dropItems.get(i);
+            if (item.collide(player)) {
+                dropItems.remove(i);
+                gc.setFill(Color.WHITE);
+                gc.fillText("Item Collected", item.getPosX(), item.getPosY());
             }
         }
 

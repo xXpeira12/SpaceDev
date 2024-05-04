@@ -1,4 +1,4 @@
-package bomb;
+package entity.bomb;
 
 import javafx.scene.image.Image;
 import entity.shot.Shot;

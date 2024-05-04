@@ -1,6 +1,6 @@
-package shot;
+package entity.shot;
 
-public class SpreadShot extends SpeedShot{
+public class SpreadShot extends SpeedShot {
     private int numShots;
     private SpeedShot[] shots;
     private int spaceBetweenShot;
@@ -11,7 +11,7 @@ public class SpreadShot extends SpeedShot{
         this.shots = new SpeedShot[numShots];
         this.spaceBetweenShot = spaceBetweenShot;
         int initialX = -this.spaceBetweenShot * (numShots / 2);
-        for(int i=0; i < numShots; i++) {
+        for (int i = 0; i < numShots; i++) {
             shots[i] = new SpeedShot(posX + initialX + i * this.spaceBetweenShot, posY);
         }
     }
