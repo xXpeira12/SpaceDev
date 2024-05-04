@@ -2,9 +2,10 @@ package rocket;
 
 import ability.Drawable;
 import ability.Updatable;
-import bomb.Bomb;
-import shot.Shot;
+import shot.*;
+import bomb.*;
 import javafx.scene.image.Image;
+
 
 import static application.Main.*;
 
@@ -16,6 +17,7 @@ public class Rocket implements Drawable, Updatable {
     private boolean destroyed;
     private Image img;
     private int explosionsStep = 0;
+
     public Rocket(int posX, int posY, int size, Image image) {
         this.posX = posX;
         this.posY = posY;
@@ -23,8 +25,11 @@ public class Rocket implements Drawable, Updatable {
         this.img = image;
     }
 
-    public Shot shoot() {
-        return new Shot(this.posX + this.size / 2 - Shot.size / 2, this.posY - Shot.size);
+    public BaseShot shoot() {
+        return new BaseShot(this.posX + this.size / 2 - BaseShot.size / 2, this.posY - BaseShot.size);
+//        return new SpeedShot(this.posX + this.size / 2 - SpeedShot.size / 2, this.posY - SpeedShot.size);
+//        return new BigShot(this.posX + this.size / 2 - BigShot.size / 2, this.posY - BigShot.size);
+//        return new SpreadShot(this.posX + this.size / 2 - SpeedShot.size / 2, this.posY - SpreadShot.size, 4, 20);
     }
 
     public void update() {
