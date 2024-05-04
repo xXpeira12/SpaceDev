@@ -47,7 +47,7 @@ public class Rocket extends Entity implements Drawable, Updatable {
         setExplosionsStep(-1);
     }
 
-    public boolean colide(Bomb other) {
+    public boolean collide(Bomb other) {
         int d = distance(getPosX() + getSize() / 2, getPosY() + getSize() / 2,
                 other.getPosX() + other.getSize() / 2, other.getPosY() + other.getSize() / 2);
         return d < other.getSize() / 2 + getSize() / 2;

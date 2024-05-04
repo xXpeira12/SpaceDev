@@ -5,6 +5,7 @@ import entity.bomb.BigBomb;
 import entity.bomb.Bomb;
 import entity.bomb.BossBomb;
 import entity.bomb.FastBomb;
+import entity.shot.BaseShot;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -40,7 +41,7 @@ public class Main extends Application {
     public static final int EXPLOSION_COLS = 3;
     public static final int EXPLOSION_H = 128;
     public static final int EXPLOSION_STEPS = 15;
-    public static final int INITIAL_SCORE = 25;
+    public static final int INITIAL_SCORE = 48;
     public static final int BASE_SHOT_SIZE = 6;
     public static final int BIG_SHOT_SIZE = 9;
     public static final int SPEED_SHOT_SIZE = 4;
@@ -179,7 +180,7 @@ public class Main extends Application {
         }
 
         Bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
-            if (player.colide(e) && !player.isExploding()) {
+            if (player.collide(e) && !player.isExploding()) {
                 player.explode();
             }
         });
@@ -193,7 +194,7 @@ public class Main extends Application {
             shot.update();
             shot.draw();
             for (Bomb bomb : Bombs) {
-                if (shot.colide(bomb) && !bomb.isExploding()) {
+                if (shot.collide(bomb) && !bomb.isExploding()) {
                     shot.dealDamage(bomb);
                     if (bomb.getHealth() <= 0) {
                         bomb.setDestroyed(true);
@@ -244,27 +245,27 @@ public class Main extends Application {
 
         gameOver = player.isDestroyed();
 
-//        for (Bomb entity.bomb : Bombs) {
-//    if (entity.bomb instanceof BossBomb) {
-//        // Cast entity.bomb to BossBomb so we can call BossBomb methods
-//        BossBomb bossBomb = (BossBomb) entity.bomb;
-//
-//        // Call the shoot method
-//       bossBomb.shoot(bossBomb.getShots());
-//
-//        // Update and draw the shot
-//        for (Shot shot : bossBomb.getShots()) {
-//            shot.update();
-//            shot.draw();
-//
-//            // Check for collision with Rocket
-//            if (shot.collide(player)) {
-//                gameOver = true; // Assuming you have a gameOver variable to end the game
-//                return; // End the game immediately
-//            }
-//        }
-//    }
-//}
+        for (Bomb bomb : Bombs) {
+            if (bomb instanceof BossBomb) {
+                // Cast bomb to BossBomb so we can call BossBomb methods
+                BossBomb bossBomb = (BossBomb) bomb;
+
+                // Call the shoot method
+                bossBomb.shoot();
+
+                // Update and draw the shot
+                for (BaseShot shot : bossBomb.getShots()) {
+                    shot.updateBombShot();
+                    shot.drawBombShot(); // You need to implement this method in the BaseShot class
+
+                    // Check for collision with Player
+                    if (shot.collide(player)) {
+                        gameOver = true; // Assuming you have a gameOver variable to end the game
+                        return; // End the game immediately
+                    }
+                }
+            }
+        }
 
         if (RAND.nextInt(10) > 2) {
             univ.add(new Universe());
