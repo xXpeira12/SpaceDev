@@ -179,7 +179,7 @@ public class Main extends Application {
         }
 
         Bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
-            if (player.colide(e) && !player.isExploding()) {
+            if (player.collide(e) && !player.isExploding()) {
                 player.explode();
             }
         });
@@ -193,7 +193,7 @@ public class Main extends Application {
             shot.update();
             shot.draw();
             for (Bomb bomb : Bombs) {
-                if (shot.colide(bomb) && !bomb.isExploding()) {
+                if (shot.collide(bomb) && !bomb.isExploding()) {
                     shot.dealDamage(bomb);
                     if (bomb.getHealth() <= 0) {
                         bomb.setDestroyed(true);

@@ -13,7 +13,7 @@ public class BaseShot extends Shot {
     }
 
     @Override
-    public boolean colide(Bomb bomb) {
+    public boolean collide(Bomb bomb) {
         int distance = distance(getPosX() + getSize() / 2, getPosY() + getSize() / 2, bomb.getPosX() + bomb.getSize() / 2, bomb.getPosY() + bomb.getSize() / 2);
         return distance < bomb.getSize() / 2 + getSize() / 2;
     }
