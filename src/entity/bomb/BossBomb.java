@@ -12,7 +12,8 @@ import static application.Main.*;
 
 public class BossBomb extends Bomb {
 
-    private int SPEED = (score / 50) + 2;
+    private int speed = (score / 50) + 2;
+    private long lastShotTime;
     private List<BaseShot> shots = new ArrayList<>();
 
     public BossBomb(int posX, int posY, int size, Image img, int health) {
@@ -22,8 +23,15 @@ public class BossBomb extends Bomb {
     public void update() {
         if (isExploding()) setExplosionsStep(getExplosionsStep() + 1);
         setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
-        if (!isExploding() && !isDestroyed()) setPosY(getPosY() + this.SPEED);
+        if (!isExploding() && !isDestroyed()) setPosY(getPosY() + this.speed);
         if (getPosY() > HEIGHT) setDestroyed(true);
+    }
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
     public List<BaseShot> getShots() {

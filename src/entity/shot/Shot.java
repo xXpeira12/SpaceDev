@@ -21,8 +21,6 @@ public abstract class Shot extends Entity implements Drawable, Updatable {
 
     public abstract boolean collide(Bomb bomb);
 
-    public abstract boolean collide(Rocket rocket);
-
     public abstract void dealDamage(Bomb bomb);
 
     public boolean isToRemove() {

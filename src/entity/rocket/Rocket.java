@@ -23,7 +23,8 @@ public class Rocket extends Entity implements Drawable, Updatable {
         } else if (status == RocketStatus.BIG) {
 //            return new BigShot(this.posX + this.size / 2 - BIG_SHOT_SIZE / 2, this.posY - BIG_SHOT_SIZE);
 //            return new SpeedShot(this.posX + this.size / 2 - SPEED_SHOT_SIZE / 2, this.posY - SPEED_SHOT_SIZE);
-            return new SpreadShot(this.posX + this.size / 2 - SPEED_SHOT_SIZE / 2, this.posY - SPEED_SHOT_SIZE, 4, 20);
+//            return new SpreadShot(this.posX + this.size / 2 - SPEED_SHOT_SIZE / 2, this.posY - SPEED_SHOT_SIZE, 4, 20);
+            return new FreezeShot(this.posX + this.size / 2 - BIG_SHOT_SIZE / 2, this.posY - BIG_SHOT_SIZE, 1);
         } else return null;
     }
 
