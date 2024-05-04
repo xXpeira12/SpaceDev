@@ -10,12 +10,10 @@ import static application.Main.*;
 
 public class BossBomb extends Bomb {
 
-    private int speed = (score / 50) + 2;
-    private List<BaseShot> shots = new ArrayList<>();
+    private final List<BaseShot> shots = new ArrayList<>();
 
     public BossBomb(int posX, int posY, int size, Image img, int health) {
         super(posX, posY, size, img, health);
-        setSpeed(speed);
     }
 
     public List<BaseShot> getShots() {
@@ -27,5 +25,8 @@ public class BossBomb extends Bomb {
         shots.add(new BaseShot(this.getPosX(), this.getPosY()));
     }
 
-
+    @Override
+    protected int calculateSpeed() {
+        return (score / BOSS_BOMB_SPEED_FACTOR) + BOSS_BOMB_BASE_SPEED;
+    }
 }

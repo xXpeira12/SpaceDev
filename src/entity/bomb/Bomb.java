@@ -1,13 +1,11 @@
 package entity.bomb;
 
-import ability.Drawable;
-import ability.Updatable;
 import entity.Entity;
 import javafx.scene.image.Image;
 
 import static application.Main.*;
 
-public abstract class Bomb extends Entity implements Updatable, Drawable {
+public abstract class Bomb extends Entity {
     private int explosionsStep = 0;
     private int speed;
     private int health;
@@ -15,6 +13,7 @@ public abstract class Bomb extends Entity implements Updatable, Drawable {
     public Bomb(int posX, int posY, int size, Image img, int health) {
         super(posX, posY, size, img);
         this.health = health;
+        this.speed = calculateSpeed();
     }
 
     public void update() {
@@ -60,4 +59,6 @@ public abstract class Bomb extends Entity implements Updatable, Drawable {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+
+    protected abstract int calculateSpeed();
 }

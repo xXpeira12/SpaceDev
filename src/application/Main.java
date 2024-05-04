@@ -61,6 +61,14 @@ public class Main extends Application {
     private boolean left, right, shoot, restart;
     private boolean shotFired;
     int counter = 0;
+    public static final int BASE_BOMB_SPEED_FACTOR = 15;
+    public static final int BASE_BOMB_BASE_SPEED = 2;
+    public static final int BIG_BOMB_SPEED_FACTOR = 35;
+    public static final int BIG_BOMB_BASE_SPEED = 2;
+    public static final int FAST_BOMB_SPEED_FACTOR = 5;
+    public static final int FAST_BOMB_BASE_SPEED = 2;
+    public static final int BOSS_BOMB_SPEED_FACTOR = 50;
+    public static final int BOSS_BOMB_BASE_SPEED = 2;
 
     @Override
     public void start(Stage stage) throws Exception {
