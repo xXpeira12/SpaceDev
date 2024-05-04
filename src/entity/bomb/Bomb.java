@@ -3,7 +3,7 @@ package entity.bomb;
 import entity.Entity;
 import javafx.scene.image.Image;
 
-import static application.Main.*;
+import static application.GamePlay.*;
 import static config.Config.*;
 
 public abstract class Bomb extends Entity {

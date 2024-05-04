@@ -6,7 +6,7 @@ import entity.rocket.Rocket;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import static application.Main.gc;
+import static application.GamePlay.gc;
 
 public abstract class Shot extends Entity {
     private boolean isRemove;

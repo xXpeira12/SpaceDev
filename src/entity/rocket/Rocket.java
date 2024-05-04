@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import entity.shot.*;
 import entity.Entity;
 
-import static application.Main.*;
+import static application.GamePlay.*;
 import static config.Config.*;
 
 public class Rocket extends Entity {

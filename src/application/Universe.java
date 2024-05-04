@@ -3,7 +3,7 @@ package application;
 import ability.Drawable;
 import javafx.scene.paint.Color;
 
-import static application.Main.*;
+import static application.GamePlay.*;
 import static config.Config.*;
 
 public class Universe implements Drawable {

@@ -13,7 +13,7 @@ public class Config {
     public static final int EXPLOSION_COLS = 3;
     public static final int EXPLOSION_H = 128;
     public static final int EXPLOSION_STEPS = 15;
-    public static final int INITIAL_SCORE = 48;
+    public static final int INITIAL_SCORE = 0;
     public static final int BASE_SHOT_SIZE = 6;
     public static final int BIG_SHOT_SIZE = 9;
     public static final int SPEED_SHOT_SIZE = 4;

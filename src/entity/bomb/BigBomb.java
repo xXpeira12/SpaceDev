@@ -2,7 +2,7 @@ package entity.bomb;
 
 import javafx.scene.image.Image;
 
-import static application.Main.*;
+import static application.GamePlay.*;
 import static config.Config.BIG_BOMB_BASE_SPEED;
 import static config.Config.BIG_BOMB_SPEED_FACTOR;
 

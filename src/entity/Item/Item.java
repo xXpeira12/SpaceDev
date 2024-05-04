@@ -4,7 +4,7 @@ import entity.Entity;
 import entity.rocket.Rocket;
 import javafx.scene.image.Image;
 
-import static application.Main.*;
+import static application.GamePlay.*;
 import static config.Config.*;
 
 public abstract class Item extends Entity {

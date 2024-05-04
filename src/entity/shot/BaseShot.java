@@ -4,7 +4,7 @@ import entity.bomb.Bomb;
 import entity.rocket.Rocket;
 import javafx.scene.paint.Color;
 
-import static application.Main.gc;
+import static application.GamePlay.gc;
 import static config.Config.*;
 
 public class BaseShot extends Shot {
