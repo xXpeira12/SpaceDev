@@ -6,11 +6,11 @@ import shot.Shot;
 import java.util.ArrayList;
 import java.util.List;
 
-import static application.Main.score;
+import static application.Main.*;
 
 public class BossBomb extends Bomb {
 
-    private int SPEED = (score / 20) + 2;
+    private int SPEED = (score / 50) + 2;
     private long lastShotTime;
     private List<Shot> shots;
 
@@ -20,6 +20,12 @@ public class BossBomb extends Bomb {
         this.shots = new ArrayList<>();
     }
 
+    public void update() {
+        if (isExploding()) setExplosionsStep(getExplosionsStep() + 1);
+        setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
+        if (!isExploding() && !isDestroyed()) setPosY(getPosY() + this.SPEED);
+        if (getPosY() > HEIGHT) setDestroyed(true);
+    }
 
 //    public void shoot(List<Shot> shots) {
 //        long now = System.nanoTime();

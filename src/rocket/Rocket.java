@@ -2,10 +2,9 @@ package rocket;
 
 import ability.Drawable;
 import ability.Updatable;
-import shot.*;
 import bomb.*;
 import javafx.scene.image.Image;
-
+import shot.*;
 
 import static application.Main.*;
 
@@ -26,19 +25,19 @@ public class Rocket implements Drawable, Updatable {
     }
 
     public BaseShot shoot() {
-        return new BaseShot(this.posX + this.size / 2 - BaseShot.size / 2, this.posY - BaseShot.size);
+//        return new BaseShot(this.posX + this.size / 2 - BaseShot.size / 2, this.posY - BaseShot.size);
 //        return new SpeedShot(this.posX + this.size / 2 - SpeedShot.size / 2, this.posY - SpeedShot.size);
 //        return new BigShot(this.posX + this.size / 2 - BigShot.size / 2, this.posY - BigShot.size);
-//        return new SpreadShot(this.posX + this.size / 2 - SpeedShot.size / 2, this.posY - SpreadShot.size, 4, 20);
+        return new SpreadShot(this.posX + this.size / 2 - SpeedShot.size / 2, this.posY - SpreadShot.size, 4, 20);
     }
 
     public void update() {
-        if(isExploding()) setExplosionsStep(getExplosionsStep() + 1);
+        if (isExploding()) setExplosionsStep(getExplosionsStep() + 1);
         setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
     }
 
     public void draw() {
-        if(isExploding()) {
+        if (isExploding()) {
             gc.drawImage(EXPLOSION_IMG, getExplosionsStep() % EXPLOSION_COLS * EXPLOSION_W, (getExplosionsStep() / EXPLOSION_ROWS) * EXPLOSION_H + 1, EXPLOSION_W, EXPLOSION_H, getPosX(), getPosY(), getSize(), getSize());
         } else {
             gc.drawImage(getImg(), getPosX(), getPosY(), getSize(), getSize());
@@ -48,7 +47,7 @@ public class Rocket implements Drawable, Updatable {
     public boolean colide(Bomb other) {
         int d = distance(getPosX() + getSize() / 2, getPosY() + getSize() / 2,
                 other.getPosX() + other.getSize() / 2, other.getPosY() + other.getSize() / 2);
-        return d < other.getSize() / 2 + getSize() / 2 ;
+        return d < other.getSize() / 2 + getSize() / 2;
     }
 
     private int distance(int x1, int y1, int x2, int y2) {

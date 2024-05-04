@@ -109,8 +109,7 @@ public class Main extends Application {
         shots = new ArrayList<>();
         Bombs = new ArrayList<>();
         player = new Rocket(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
-        score = 0;
-//        IntStream.range(0, MAX_BOMBS).mapToObj(i -> new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)])).forEach(Bombs::add);
+        score = 48;
         IntStream.range(0, MAX_BOMBS).forEach(i -> {
             int bombType = RAND.nextInt(3); // Randomly choose between 0, 1, and 2
             Bomb bomb;
