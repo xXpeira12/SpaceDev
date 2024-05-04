@@ -49,7 +49,7 @@ public class Main extends Application {
     public static final int POWER_UP_DURATION = 3 * 60;
     public static final int ITEM_DROP_SPEED = 6;
     public static final Image BOMBS_IMG[] = {new Image("file:assets/1.png"), new Image("file:assets/2.png"), new Image("file:assets/3.png"), new Image("file:assets/4.png")};
-    public static final Image BoostShot_IMG[] = {new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png")};
+    public static final Image BoostShot_IMG[] = {new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png")};
     final int MAX_BOMBS = 6;
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
@@ -208,7 +208,7 @@ public class Main extends Application {
                         bomb.update();
                         bomb.draw();
                         int randomDropItem = RAND.nextInt(10);
-                        if (randomDropItem < 3) {
+                        if (randomDropItem < 4) {
                             items.add(new BoostShotItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, randomDropItem));
                         }
                     }
