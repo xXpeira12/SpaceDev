@@ -4,12 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -38,7 +33,13 @@ public class Main extends Application {
 
         // Create buttons
         Button startButton = createMenuButton("Start Game");
-        startButton.setOnAction(e -> startGame());
+        startButton.setOnAction(e -> {
+            try {
+                startGame();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         Button howToPlayButton = createMenuButton("How to Play");
         howToPlayButton.setOnAction(e -> showHowToPlay());
@@ -92,29 +93,30 @@ public class Main extends Application {
 
         // Default button style (blue and purple gradient)
         button.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #4d55ff, #8a2be2);" +
+                "-fx-background-color: linear-gradient(to bottom, #000099, #8a2be2);" +
                         "-fx-background-radius: 0;" +
-                        "-fx-border-color: #ffffff;" +
+                        "-fx-border-color: #000000;" +
                         "-fx-border-width: 2px;" +
                         "-fx-border-radius: 5px;"
         );
 
-        // Button hover effect (slightly lighter gradient)
+        // Set button hover style
         button.setOnMouseEntered(e -> {
             button.setStyle(
-                    "-fx-background-color: linear-gradient(to bottom, #6670ff, #9b30ff);" +
+                    "-fx-background-color: linear-gradient(to bottom, #000099, #9b30ff);" +
                             "-fx-background-radius: 0;" +
-                            "-fx-border-color: #ffffff;" +
+                            "-fx-border-color: #000000;" +
                             "-fx-border-width: 2px;" +
                             "-fx-border-radius: 5px;"
             );
         });
 
+        // Set button exit (hover off) style
         button.setOnMouseExited(e -> {
             button.setStyle(
-                    "-fx-background-color: linear-gradient(to bottom, #4d55ff, #8a2be2);" +
+                    "-fx-background-color: linear-gradient(to bottom, #000099, #8a2be2);" +
                             "-fx-background-radius: 0;" +
-                            "-fx-border-color: #ffffff;" +
+                            "-fx-border-color: #000000;" +
                             "-fx-border-width: 2px;" +
                             "-fx-border-radius: 5px;"
             );
@@ -125,9 +127,28 @@ public class Main extends Application {
 
 
 
-    private void startGame() {
+    private void startGame() throws Exception {
         System.out.println("Starting the game!");
-        // Implement game start logic
+        GamePlay gamePlay = new GamePlay();
+
+        // Create a new scene for the game play
+//        Scene gameScene = new Scene(new StackPane(), GamePlay.WIDTH, GamePlay.HEIGHT);
+//        gameScene.setOnKeyPressed(gamePlay::handleKeyPress); // Handle key presses in the game
+//
+//        // Set up the game canvas
+//        Canvas canvas = new Canvas(GamePlay.WIDTH, GamePlay.HEIGHT);
+//        GraphicsContext gc = canvas.getGraphicsContext2D();
+//        gamePlay.setGraphicsContext(gc);
+//
+//        // Add canvas to the game scene
+//        StackPane gamePane = new StackPane(canvas);
+//        gameScene.setRoot(gamePane);
+
+        // Start the game
+        gamePlay.start(new Stage());
+
+        // Switch to the game scene
+//        primaryStage.setScene(gameScene);
     }
 
     private void showHowToPlay() {
