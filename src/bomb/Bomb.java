@@ -27,14 +27,14 @@ public class Bomb implements Drawable, Updatable {
     }
 
     public void update() {
-        if(isExploding()) setExplosionsStep(getExplosionsStep() + 1);
+        if (isExploding()) setExplosionsStep(getExplosionsStep() + 1);
         setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
-        if(!isExploding() && !isDestroyed()) setPosY(getPosY() + this.SPEED);
-        if(getPosY() > HEIGHT) setDestroyed(true);
+        if (!isExploding() && !isDestroyed()) setPosY(getPosY() + this.SPEED);
+        if (getPosY() > HEIGHT) setDestroyed(true);
     }
 
     public void draw() {
-        if(isExploding()) {
+        if (isExploding()) {
             gc.drawImage(EXPLOSION_IMG, getExplosionsStep() % EXPLOSION_COLS * EXPLOSION_W, (getExplosionsStep() / EXPLOSION_ROWS) * EXPLOSION_H + 1, EXPLOSION_W, EXPLOSION_H, getPosX(), getPosY(), getSize(), getSize());
         } else {
             gc.drawImage(getImg(), getPosX(), getPosY(), getSize(), getSize());
@@ -42,11 +42,10 @@ public class Bomb implements Drawable, Updatable {
     }
 
 
-
     public boolean colide(Rocket other) {
         int d = distance(getPosX() + getSize() / 2, getPosY() + getSize() / 2,
                 other.getPosX() + other.getSize() / 2, other.getPosY() + other.getSize() / 2);
-        return d < other.getSize() / 2 + getSize() / 2 ;
+        return d < other.getSize() / 2 + getSize() / 2;
     }
 
     private int distance(int x1, int y1, int x2, int y2) {
@@ -113,6 +112,7 @@ public class Bomb implements Drawable, Updatable {
     public void setExplosionsStep(int explosionsStep) {
         this.explosionsStep = explosionsStep;
     }
+
     public int getHealth() {
         return health;
     }

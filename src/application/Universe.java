@@ -20,13 +20,13 @@ public class Universe implements Drawable {
         this.g = RAND.nextInt(100) + 150;
         this.b = RAND.nextInt(100) + 150;
         this.opacity = RAND.nextFloat();
-        if(getOpacity() < 0) setOpacity(getOpacity() * (-1));
-        if(getOpacity() > 0.5) setOpacity(0.5);
+        if (getOpacity() < 0) setOpacity(getOpacity() * (-1));
+        if (getOpacity() > 0.5) setOpacity(0.5);
     }
 
     public void draw() {
-        if(getOpacity() > 0.8) setOpacity(getOpacity() - 0.01);
-        if(getOpacity() < 0.1) setOpacity(getOpacity() + 0.01);
+        if (getOpacity() > 0.8) setOpacity(getOpacity() - 0.01);
+        if (getOpacity() < 0.1) setOpacity(getOpacity() + 0.01);
         gc.setFill(Color.rgb(getR(), getG(), getB(), getOpacity()));
         gc.fillOval(getPosX(), getPosY(), getW(), getH());
         setPosY(getPosY() + 20);

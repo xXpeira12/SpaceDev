@@ -1,5 +1,9 @@
 package application;
 
+import bomb.BigBomb;
+import bomb.Bomb;
+import bomb.BossBomb;
+import bomb.FastBomb;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -14,7 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import bomb.*;
 import rocket.Rocket;
 import shot.Shot;
 
@@ -35,10 +38,7 @@ public class Main extends Application {
     public static final int EXPLOSION_COLS = 3;
     public static final int EXPLOSION_H = 128;
     public static final int EXPLOSION_STEPS = 15;
-    public static final Image BOMBS_IMG[] = {
-      new Image("file:assets/1.png"),
-      new Image("file:assets/2.png")
-    };
+    public static final Image BOMBS_IMG[] = {new Image("file:assets/1.png"), new Image("file:assets/2.png"), new Image("file:assets/3.png"), new Image("file:assets/4.png")};
     final int MAX_BOMBS = 6;
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
@@ -115,13 +115,13 @@ public class Main extends Application {
             Bomb bomb;
             switch (bombType) {
                 case 0:
-                    bomb = new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 5);
+                    bomb = new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[0], 5);
                     break;
                 case 1:
-                    bomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 2);
+                    bomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[1], 2);
                     break;
                 case 2:
-                    bomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 10);
+                    bomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[2], 10);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + bombType);
@@ -129,6 +129,7 @@ public class Main extends Application {
             Bombs.add(bomb);
         });
     }
+
     private void run(GraphicsContext gc) {
         gc.setFill(Color.grayRgb(20));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
@@ -180,7 +181,7 @@ public class Main extends Application {
             for (Bomb bomb : Bombs) {
                 if (shot.colide(bomb) && !bomb.isExploding()) {
                     bomb.setHealth(bomb.getHealth() - shot.getDamage());
-                    if(bomb.getHealth() <= 0) {
+                    if (bomb.getHealth() <= 0) {
                         bomb.setDestroyed(true);
                         score++;
                         bomb.explode();
@@ -198,18 +199,18 @@ public class Main extends Application {
                 Class bombType = bombTypes[RAND.nextInt(bombTypes.length)];
                 Bomb newBomb;
                 if (bombType == Bomb.class) {
-                    newBomb = new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 5);
+                    newBomb = new Bomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[0], 5);
                 } else if (bombType == FastBomb.class) {
-                    newBomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 2);
+                    newBomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[1], 2);
                 } else { // bombType == BigBomb.class
-                    newBomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 10);
+                    newBomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[2], 10);
                 }
                 Bombs.set(i, newBomb);
             }
         }
 
-        if (score > 50 && score % 20 == 0 && !Bombs.stream().anyMatch(b -> b instanceof BossBomb)) {
-            Bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[RAND.nextInt(BOMBS_IMG.length)], 20));
+        if (score >= 50 && score % 10 == 0 && Bombs.stream().noneMatch((b -> b instanceof BossBomb))) {
+            Bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[3], 20));
         }
 
         gameOver = player.isDestroyed();

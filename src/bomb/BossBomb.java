@@ -1,15 +1,16 @@
 package bomb;
 
 import javafx.scene.image.Image;
-import java.util.List;
-import java.util.ArrayList;
 import shot.Shot;
 
-import static application.Main.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static application.Main.score;
 
 public class BossBomb extends Bomb {
 
-    private int SPEED = (score /  20) + 2;
+    private int SPEED = (score / 20) + 2;
     private long lastShotTime;
     private List<Shot> shots;
 

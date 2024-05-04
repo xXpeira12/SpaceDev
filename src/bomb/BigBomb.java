@@ -12,9 +12,9 @@ public class BigBomb extends Bomb {
     }
 
     public void update() {
-        if(isExploding()) setExplosionsStep(getExplosionsStep() + 1);
+        if (isExploding()) setExplosionsStep(getExplosionsStep() + 1);
         setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
-        if(!isExploding() && !isDestroyed()) setPosY(getPosY() + this.SPEED);
-        if(getPosY() > HEIGHT) setDestroyed(true);
+        if (!isExploding() && !isDestroyed()) setPosY(getPosY() + this.SPEED);
+        if (getPosY() > HEIGHT) setDestroyed(true);
     }
 }
