@@ -3,6 +3,7 @@ package entity.Item;
 import entity.rocket.Rocket;
 
 import static application.Main.*;
+import static config.Config.BoostShot_IMG;
 
 public class BoostShotItem extends Item {
     private final Rocket.RocketStatus STATUS;

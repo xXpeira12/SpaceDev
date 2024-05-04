@@ -5,6 +5,7 @@ import entity.rocket.Rocket;
 import javafx.scene.image.Image;
 
 import static application.Main.*;
+import static config.Config.*;
 
 public abstract class Item extends Entity {
     public Item(int posX, int posY, int size, Image image) {

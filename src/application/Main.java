@@ -28,28 +28,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+import static config.Config.*;
+
 public class Main extends Application {
     public static final Random RAND = new Random();
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
-    public static final int PLAYER_SIZE = 60;
-    public static final Image PLAYER_IMG = new Image("file:assets/player.png");
-    public static final Image EXPLOSION_IMG = new Image("file:assets/explosion.png");
-    public static final int EXPLOSION_W = 128;
-    public static final int EXPLOSION_ROWS = 3;
-    public static final int EXPLOSION_COLS = 3;
-    public static final int EXPLOSION_H = 128;
-    public static final int EXPLOSION_STEPS = 15;
-    public static final int INITIAL_SCORE = 48;
-    public static final int BASE_SHOT_SIZE = 6;
-    public static final int BIG_SHOT_SIZE = 9;
-    public static final int SPEED_SHOT_SIZE = 4;
-    public static final int POWER_UP_DURATION = 3 * 60;
-    public static final int ITEM_DROP_SPEED = 6;
-    public static final Image[] BOMBS_IMG = {new Image("file:assets/1.png"), new Image("file:assets/2.png"), new Image("file:assets/3.png"), new Image("file:assets/4.png")};
-    public static final Image[] BoostShot_IMG = {new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png")};
-    final int MAX_BOMBS = 6;
-    final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
     public static GraphicsContext gc;
     public static Rocket player;
@@ -61,14 +43,6 @@ public class Main extends Application {
     private boolean left, right, shoot, restart;
     private boolean shotFired;
     int counter = 0;
-    public static final int BASE_BOMB_SPEED_FACTOR = 15;
-    public static final int BASE_BOMB_BASE_SPEED = 2;
-    public static final int BIG_BOMB_SPEED_FACTOR = 35;
-    public static final int BIG_BOMB_BASE_SPEED = 2;
-    public static final int FAST_BOMB_SPEED_FACTOR = 5;
-    public static final int FAST_BOMB_BASE_SPEED = 2;
-    public static final int BOSS_BOMB_SPEED_FACTOR = 50;
-    public static final int BOSS_BOMB_BASE_SPEED = 2;
 
     @Override
     public void start(Stage stage) throws Exception {

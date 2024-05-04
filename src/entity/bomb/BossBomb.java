@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static application.Main.*;
+import static config.Config.BOSS_BOMB_BASE_SPEED;
+import static config.Config.BOSS_BOMB_SPEED_FACTOR;
 
 public class BossBomb extends Bomb {
 

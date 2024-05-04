@@ -4,6 +4,7 @@ import ability.Drawable;
 import javafx.scene.paint.Color;
 
 import static application.Main.*;
+import static config.Config.*;
 
 public class Universe implements Drawable {
     private int posX;
