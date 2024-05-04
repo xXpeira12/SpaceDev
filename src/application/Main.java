@@ -6,6 +6,7 @@ import entity.bomb.BigBomb;
 import entity.bomb.Bomb;
 import entity.bomb.BossBomb;
 import entity.bomb.FastBomb;
+import entity.shot.BaseShot;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -41,14 +42,14 @@ public class Main extends Application {
     public static final int EXPLOSION_COLS = 3;
     public static final int EXPLOSION_H = 128;
     public static final int EXPLOSION_STEPS = 15;
-    public static final int INITIAL_SCORE = 25;
+    public static final int INITIAL_SCORE = 48;
     public static final int BASE_SHOT_SIZE = 6;
     public static final int BIG_SHOT_SIZE = 9;
     public static final int SPEED_SHOT_SIZE = 4;
     public static final int POWER_UP_DURATION = 3 * 60;
     public static final int ITEM_DROP_SPEED = 6;
     public static final Image BOMBS_IMG[] = {new Image("file:assets/1.png"), new Image("file:assets/2.png"), new Image("file:assets/3.png"), new Image("file:assets/4.png")};
-    public static final Image BoostShot_IMG[] = {new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png")};
+    public static final Image BoostShot_IMG[] = {new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png"), new Image("file:assets/drop_item.png")};
     final int MAX_BOMBS = 6;
     final int MAX_SHOTS = MAX_BOMBS * 2;
     boolean gameOver = false;
@@ -61,6 +62,7 @@ public class Main extends Application {
     public static int score;
     private boolean left, right, shoot, restart;
     private boolean shotFired;
+    int counter = 0;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -183,7 +185,7 @@ public class Main extends Application {
         }
 
         Bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
-            if (player.colide(e) && !player.isExploding()) {
+            if (player.collide(e) && !player.isExploding()) {
                 player.explode();
             }
         });
@@ -197,7 +199,7 @@ public class Main extends Application {
             shot.update();
             shot.draw();
             for (Bomb bomb : Bombs) {
-                if (shot.colide(bomb) && !bomb.isExploding()) {
+                if (shot.collide(bomb) && !bomb.isExploding()) {
                     shot.dealDamage(bomb);
                     if (bomb.getHealth() <= 0) {
                         bomb.setDestroyed(true);
@@ -206,7 +208,7 @@ public class Main extends Application {
                         bomb.update();
                         bomb.draw();
                         int randomDropItem = RAND.nextInt(10);
-                        if (randomDropItem < 3) {
+                        if (randomDropItem < 4) {
                             items.add(new BoostShotItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, randomDropItem));
                         }
                     }
@@ -241,35 +243,53 @@ public class Main extends Application {
                 gc.setFill(Color.WHITE);
                 gc.fillText("Item Collected", item.getPosX(), item.getPosY());
             }
-        }
 
-        if (score >= 50 && score % 10 == 0 && Bombs.stream().noneMatch((b -> b instanceof BossBomb))) {
-            Bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[3], 20));
+            if (score >= 50 && score % 10 == 0 && Bombs.stream().noneMatch((b -> b instanceof BossBomb))) {
+                Bombs.add(new BossBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[3], 20));
+            }
+
+            counter++;
+            if (counter >= 60) { // Adjust this value based on your game's frame rate
+                for (Bomb bomb : Bombs) {
+                    if (bomb instanceof BossBomb) {
+                        BossBomb bossBomb = (BossBomb) bomb;
+                        bossBomb.shoot();
+                        counter = 0; // Reset the counter
+                    }
+                }
+            }
+
+            for (Bomb bomb : Bombs) {
+                if (bomb instanceof BossBomb) {
+                    // Cast bomb to BossBomb so we can call BossBomb methods
+                    BossBomb bossBomb = (BossBomb) bomb;
+
+                    // Update and draw the shot
+                    for (BaseShot shot : bossBomb.getShots()) {
+                        shot.updateBombShot();
+                        shot.drawBombShot(); // You need to implement this method in the BaseShot class
+
+                        // Check for collision with Player
+                        if (shot.collide(player)) {
+                            player.explode();
+                        }
+                        gameOver = player.isDestroyed();
+                        if (gameOver) {
+                            gc.setFont(Font.font(35));
+                            gc.setFill(Color.YELLOW);
+                            gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again", WIDTH / 2, HEIGHT / 2.5);
+                            if (restart) {
+                                gameOver = false;
+                                setUp();
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         gameOver = player.isDestroyed();
-
-//        for (Bomb entity.bomb : Bombs) {
-//    if (entity.bomb instanceof BossBomb) {
-//        // Cast entity.bomb to BossBomb so we can call BossBomb methods
-//        BossBomb bossBomb = (BossBomb) entity.bomb;
-//
-//        // Call the shoot method
-//       bossBomb.shoot(bossBomb.getShots());
-//
-//        // Update and draw the shot
-//        for (Shot shot : bossBomb.getShots()) {
-//            shot.update();
-//            shot.draw();
-//
-//            // Check for collision with Rocket
-//            if (shot.collide(player)) {
-//                gameOver = true; // Assuming you have a gameOver variable to end the game
-//                return; // End the game immediately
-//            }
-//        }
-//    }
-//}
 
         if (RAND.nextInt(10) > 2) {
             univ.add(new Universe());

@@ -15,7 +15,7 @@ public class Bomb implements Drawable, Updatable {
     private boolean destroyed;
     private Image img;
     private int explosionsStep = 0;
-    private int SPEED = (score / 15) + 2;
+    private int speed = (score / 15) + 2;
     private int health = 5;
 
     public Bomb(int posX, int posY, int size, Image img, int health) {
@@ -29,7 +29,7 @@ public class Bomb implements Drawable, Updatable {
     public void update() {
         if (isExploding()) setExplosionsStep(getExplosionsStep() + 1);
         setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
-        if (!isExploding() && !isDestroyed()) setPosY(getPosY() + this.SPEED);
+        if (!isExploding() && !isDestroyed()) setPosY(getPosY() + this.speed);
         if (getPosY() > HEIGHT) setDestroyed(true);
     }
 
@@ -42,7 +42,7 @@ public class Bomb implements Drawable, Updatable {
     }
 
 
-    public boolean colide(Rocket other) {
+    public boolean collide(Rocket other) {
         int d = distance(getPosX() + getSize() / 2, getPosY() + getSize() / 2,
                 other.getPosX() + other.getSize() / 2, other.getPosY() + other.getSize() / 2);
         return d < other.getSize() / 2 + getSize() / 2;
@@ -119,5 +119,13 @@ public class Bomb implements Drawable, Updatable {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 }

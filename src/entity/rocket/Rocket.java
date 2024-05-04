@@ -25,8 +25,10 @@ public class Rocket extends Entity implements Drawable, Updatable {
             return new BigShot(this.posX + this.size / 2 - BIG_SHOT_SIZE / 2, this.posY - BIG_SHOT_SIZE);
         } else if (status == RocketStatus.SPEED) {
             return new SpeedShot(this.posX + this.size / 2 - SPEED_SHOT_SIZE / 2, this.posY - SPEED_SHOT_SIZE);
-        } else {
+        } else if (status == RocketStatus.SPREAD) {
             return new SpreadShot(this.posX + this.size / 2 - SPEED_SHOT_SIZE / 2, this.posY - SPEED_SHOT_SIZE, 4, 20);
+        } else {
+            return new FreezeShot(this.posX + this.size / 2 - BIG_SHOT_SIZE / 2, this.posY - BIG_SHOT_SIZE, 1);
         }
     }
 
@@ -58,7 +60,7 @@ public class Rocket extends Entity implements Drawable, Updatable {
         setExplosionsStep(-1);
     }
 
-    public boolean colide(Bomb other) {
+    public boolean collide(Bomb other) {
         int d = distance(getPosX() + getSize() / 2, getPosY() + getSize() / 2,
                 other.getPosX() + other.getSize() / 2, other.getPosY() + other.getSize() / 2);
         return d < other.getSize() / 2 + getSize() / 2;
@@ -80,6 +82,7 @@ public class Rocket extends Entity implements Drawable, Updatable {
         SPEED,
         BIG,
         SPREAD,
+        FREEZE,
         NORMAL
     }
 

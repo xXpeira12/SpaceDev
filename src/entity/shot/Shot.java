@@ -4,6 +4,7 @@ import ability.Drawable;
 import ability.Updatable;
 import entity.bomb.Bomb;
 import entity.Entity;
+import entity.rocket.Rocket;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -18,7 +19,9 @@ public abstract class Shot extends Entity implements Drawable, Updatable {
         super(posX, posY, size, image);
     }
 
-    public abstract boolean colide(Bomb bomb);
+    public abstract boolean collide(Bomb bomb);
+
+    public abstract boolean collide(Rocket rocket);
 
     public abstract void dealDamage(Bomb bomb);
 
