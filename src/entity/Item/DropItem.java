@@ -6,8 +6,10 @@ import entity.rocket.Rocket;
 import javafx.scene.image.Image;
 
 import static application.Main.*;
+
 public class DropItem extends Entity implements Drawable {
-    private final int SPEED = 10;
+    private final int SPEED = 6;
+
     public DropItem(int posX, int posY, int size, Image image) {
         super(posX, posY, size, image);
     }
@@ -15,7 +17,7 @@ public class DropItem extends Entity implements Drawable {
     @Override
     public void update() {
         setPosY(getPosY() + SPEED);
-        if(getPosY() > HEIGHT) setDestroyed(true);
+        if (getPosY() > HEIGHT) setDestroyed(true);
     }
 
     @Override

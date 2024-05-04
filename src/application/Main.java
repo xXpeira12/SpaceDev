@@ -44,6 +44,7 @@ public class Main extends Application {
     public static final int BASE_SHOT_SIZE = 6;
     public static final int BIG_SHOT_SIZE = 9;
     public static final int SPEED_SHOT_SIZE = 4;
+    public static final int POWER_UP_DURATION = 3 * 60;
     public static final Image BOMBS_IMG[] = {new Image("file:assets/1.png"), new Image("file:assets/2.png"), new Image("file:assets/3.png"), new Image("file:assets/4.png")};
     final int MAX_BOMBS = 6;
     final int MAX_SHOTS = MAX_BOMBS * 2;
@@ -54,7 +55,6 @@ public class Main extends Application {
     List<Universe> univ;
     List<Bomb> Bombs;
     List<DropItem> dropItems;
-    private double mouseX;
     public static int score;
     private boolean left, right, shoot, restart;
     private boolean shotFired;
@@ -145,6 +145,7 @@ public class Main extends Application {
         gc.setFont(Font.font(20));
         gc.setFill(Color.WHITE);
         gc.fillText("Score: " + score, 60, 20);
+        gc.fillText("Current Gun: " + player.getStatus(), WIDTH / 2, 20);
 
         if (gameOver) {
             gc.setFont(Font.font(35));

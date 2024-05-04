@@ -12,6 +12,7 @@ import static application.Main.*;
 public class Rocket extends Entity implements Drawable, Updatable {
     private int explosionsStep = 0;
     private RocketStatus status = RocketStatus.NORMAL;
+    private int powerUpTimer = 0;
 
     public Rocket(int posX, int posY, int size, Image image) {
         super(posX, posY, size, image);
@@ -31,6 +32,14 @@ public class Rocket extends Entity implements Drawable, Updatable {
     public void update() {
         if (isExploding()) setExplosionsStep(getExplosionsStep() + 1);
         setDestroyed(getExplosionsStep() > EXPLOSION_STEPS);
+
+        if (status != RocketStatus.NORMAL) {
+            powerUpTimer++;
+            if (powerUpTimer >= POWER_UP_DURATION) {
+                status = RocketStatus.NORMAL;
+                powerUpTimer = 0;
+            }
+        }
     }
 
     @Override
@@ -74,5 +83,11 @@ public class Rocket extends Entity implements Drawable, Updatable {
 
     public void setStatus(RocketStatus status) {
         this.status = status;
+        powerUpTimer = 0;
     }
+
+    public RocketStatus getStatus() {
+        return status;
+    }
+
 }
