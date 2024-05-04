@@ -130,7 +130,7 @@ public class Main extends Application {
         player = new Rocket(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
         score = INITIAL_SCORE;
         IntStream.range(0, MAX_BOMBS).forEach(i -> {
-            int bombType = RAND.nextInt(3); // Randomly choose between 0, 1, and 2
+            int bombType = RAND.nextInt(3);
             Bomb bomb;
             switch (bombType) {
                 case 0:
@@ -230,7 +230,7 @@ public class Main extends Application {
                     newBomb = new BaseBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[0], 5);
                 } else if (bombType == FastBomb.class) {
                     newBomb = new FastBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[1], 2);
-                } else { // bombType == BigBomb.class
+                } else {
                     newBomb = new BigBomb(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, BOMBS_IMG[2], 10);
                 }
                 bombs.set(i, newBomb);
