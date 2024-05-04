@@ -7,16 +7,14 @@ import javafx.scene.image.Image;
 
 import static application.Main.*;
 
-public abstract class DropItem extends Entity implements Drawable {
-    private final int SPEED = 6;
-
-    public DropItem(int posX, int posY, int size, Image image) {
+public abstract class Item extends Entity implements Drawable {
+    public Item(int posX, int posY, int size, Image image) {
         super(posX, posY, size, image);
     }
 
     @Override
     public void update() {
-        setPosY(getPosY() + SPEED);
+        setPosY(getPosY() + ITEM_DROP_SPEED);
         if (getPosY() > HEIGHT) setDestroyed(true);
     }
 

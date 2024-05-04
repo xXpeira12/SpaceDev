@@ -5,7 +5,7 @@ import entity.rocket.Rocket;
 
 import static application.Main.*;
 
-public class BoostShotItem extends DropItem implements Drawable {
+public class BoostShotItem extends Item implements Drawable {
     private final Rocket.RocketStatus STATUS;
 
     public BoostShotItem(int posX, int posY, int size, int type) {
