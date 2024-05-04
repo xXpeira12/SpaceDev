@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import rocket.Bomb;
 import rocket.Rocket;
+import shot.BaseShot;
 import shot.Shot;
 import shot.SpreadShot;
 
@@ -151,7 +152,6 @@ public class Main extends Application {
             }
             shotFired = true;
         }
-
         Bombs.stream().peek(Rocket::update).peek(Rocket::draw).forEach(e -> {
             if (player.colide(e) && !player.isExploding()) {
                 player.explode();
@@ -168,7 +168,7 @@ public class Main extends Application {
             shot.draw();
             for (Bomb bomb : Bombs) {
                 if (shot.colide(bomb) && !bomb.isExploding()) {
-                    bomb.setHealth(bomb.getHealth() - shot.getDamage());
+                    shot.dealDamage(bomb);
                     if(bomb.getHealth() <= 0) {
                         bomb.setDestroyed(true);
                         score++;

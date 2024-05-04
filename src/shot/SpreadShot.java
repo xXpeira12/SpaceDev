@@ -24,11 +24,11 @@ public class SpreadShot extends SpeedShot{
         this.numShots = numShots;
     }
 
-    public Shot[] getShots() {
+    public BaseShot[] getShots() {
         return shots;
     }
 
-    public void setShots(Shot[] shots) {
+    public void setShots(BaseShot[] shots) {
         this.shots = (SpeedShot[]) shots;
     }
 
