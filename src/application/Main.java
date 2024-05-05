@@ -50,7 +50,7 @@ public class Main extends Application {
         Button startButton = createMenuButton("Start Game");
         startButton.setOnAction(e -> {
             try {
-                playButtonClickSound(); // Play button click sound
+//                playButtonClickSound(); // Play button click sound
                 startGame();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -182,12 +182,12 @@ public class Main extends Application {
         // Implement high scores display
     }
 
-    private void playButtonClickSound() {
-        String buttonClickSoundFile = "space_song.mp3"; // Adjust the path to your button click sound file
-        Media buttonClickMedia = new Media(new File(buttonClickSoundFile).toURI().toString());
-        MediaPlayer buttonClickPlayer = new MediaPlayer(buttonClickMedia);
-        buttonClickPlayer.play(); // Play the button click sound
-    }
+//    private void playButtonClickSound() {
+//        String buttonClickSoundFile = "space_song.mp3"; // Adjust the path to your button click sound file
+//        Media buttonClickMedia = new Media(new File(buttonClickSoundFile).toURI().toString());
+//        MediaPlayer buttonClickPlayer = new MediaPlayer(buttonClickMedia);
+//        buttonClickPlayer.play(); // Play the button click sound
+//    }
 
     @Override
     public void stop() {
