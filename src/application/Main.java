@@ -7,6 +7,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
@@ -18,6 +20,7 @@ import javafx.stage.Stage;
 import static config.Config.*;
 
 import java.io.File;
+import java.util.Objects;
 
 public class Main extends Application {
 
@@ -45,7 +48,7 @@ public class Main extends Application {
     }
 
     public void setGameState(GameState state) {
-        System.out.println("Current game state: " + gameState + "..." + "Setting game state to: " + state);
+//        System.out.println("Current game state: " + gameState + "..." + "Setting game state to: " + state);
         gameState = state;
         switch (gameState) {
             case MAIN_MENU:
@@ -57,11 +60,48 @@ public class Main extends Application {
                 primaryStage.setScene(gameplayScene);
                 startGame();
                 break;
+            default:
+                showInfoScene(gameState);
+                break;
         }
     }
 
+    private void showInfoScene(GameState state) {
+        String imageFile = getImageFile(state);
+        Scene infoScene = createInfoScene(imageFile);
+        addSceneListeners(infoScene);
+        primaryStage.setScene(infoScene);
+    }
+
+    private String getImageFile(GameState state) {
+        switch (state) {
+            case HOW_TO_PLAY:
+                return "file:assets/how_to_play.png";
+            case ENEMIES_INFO:
+                return "file:assets/enemies_info.png";
+            case ITEMS_INFO:
+                return "file:assets/items_info.png";
+            default:
+                return "";
+        }
+    }
+
+    private Scene createInfoScene(String imageFile) {
+        StackPane layout = new StackPane();
+        Scene infoScene = new Scene(layout, 800, 600);
+
+        Image image = new Image(imageFile);
+        ImageView imageView = new ImageView(image);
+
+        VBox contentLayout = new VBox(20);
+        contentLayout.setAlignment(Pos.CENTER);
+        contentLayout.getChildren().add(imageView);
+
+        layout.getChildren().add(contentLayout);
+        return infoScene;
+    }
+
     private Background createSpaceBackground() {
-        // Load background image using ClassLoader
         String imageUrl = getClass().getResource("/bgmenu.png").toExternalForm();
         BackgroundImage backgroundImage = new BackgroundImage(
                 new javafx.scene.image.Image(imageUrl, 800, 600, false, true),
@@ -79,69 +119,33 @@ public class Main extends Application {
         button.setFont(Font.font("Pixel Font", 16));
         button.setTextFill(Color.WHITE);
 
-        // Default button style (blue and purple gradient)
-        button.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #000099, #8a2be2);" +
-                        "-fx-background-radius: 0;" +
-                        "-fx-border-color: #000000;" +
-                        "-fx-border-width: 2px;" +
-                        "-fx-border-radius: 5px;"
-        );
+        String defaultStyle = "-fx-background-color: linear-gradient(to bottom, #000099, #8a2be2);" +
+                "-fx-background-radius: 0;" +
+                "-fx-border-color: #000000;" +
+                "-fx-border-width: 2px;" +
+                "-fx-border-radius: 5px;";
+        String hoverStyle = "-fx-background-color: linear-gradient(to bottom, #000099, #9b30ff);" +
+                "-fx-background-radius: 0;" +
+                "-fx-border-color: #000000;" +
+                "-fx-border-width: 2px;" +
+                "-fx-border-radius: 5px;";
 
-        // Set button hover style
-        button.setOnMouseEntered(e -> {
-            button.setStyle(
-                    "-fx-background-color: linear-gradient(to bottom, #000099, #9b30ff);" +
-                            "-fx-background-radius: 0;" +
-                            "-fx-border-color: #000000;" +
-                            "-fx-border-width: 2px;" +
-                            "-fx-border-radius: 5px;"
-            );
-        });
-
-        // Set button exit (hover off) style
-        button.setOnMouseExited(e -> {
-            button.setStyle(
-                    "-fx-background-color: linear-gradient(to bottom, #000099, #8a2be2);" +
-                            "-fx-background-radius: 0;" +
-                            "-fx-border-color: #000000;" +
-                            "-fx-border-width: 2px;" +
-                            "-fx-border-radius: 5px;"
-            );
-        });
+        button.setStyle(defaultStyle);
+        button.setOnMouseEntered(e -> button.setStyle(hoverStyle));
+        button.setOnMouseExited(e -> button.setStyle(defaultStyle));
 
         return button;
     }
 
 
     private void startGame() {
-        System.out.println("Starting the game!");
+//        System.out.println("Starting the game!");
         GamePlay gamePlay = new GamePlay();
         try {
             gamePlay.start(primaryStage);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void showHowToPlay() {
-        System.out.println("How to Play");
-        // Implement how to play information
-    }
-
-    private void showEnemiesInfo() {
-        System.out.println("Enemies Info");
-        // Implement enemies information
-    }
-
-    private void showItemsInfo() {
-        System.out.println("Item & Enhancement Info");
-        // Implement item & enhancement information
-    }
-
-    private void showHighScores() {
-        System.out.println("High Scores");
-        // Implement high scores display
     }
 
     @Override
@@ -176,19 +180,34 @@ public class Main extends Application {
                 throw new RuntimeException(ex);
             }
         });
-
         Button howToPlayButton = createMenuButton("How to Play");
-        howToPlayButton.setOnAction(e -> showHowToPlay());
+        howToPlayButton.setOnAction(e -> setGameState(GameState.HOW_TO_PLAY));
 
         Button enemiesInfoButton = createMenuButton("Enemies Info");
-        enemiesInfoButton.setOnAction(e -> showEnemiesInfo());
+        enemiesInfoButton.setOnAction(e -> setGameState(GameState.ENEMIES_INFO));
 
         Button itemsInfoButton = createMenuButton("Item & Enhancement Info");
-        itemsInfoButton.setOnAction(e -> showItemsInfo());
+        itemsInfoButton.setOnAction(e -> setGameState(GameState.ITEMS_INFO));
 
         Button exitButton = createMenuButton("Exit");
         exitButton.setOnAction(e -> primaryStage.close());
 
+        Slider volumeSlider = createVolumeSlider();
+        Label volumeLabel = createVolumeLabel();
+        HBox volumeContainer = createVolumeContainer(volumeLabel, volumeSlider);
+
+        // Add buttons to menu layout
+        menuLayout.getChildren().addAll(
+                startButton, howToPlayButton, enemiesInfoButton,
+                itemsInfoButton, exitButton,
+                volumeContainer
+        );
+        root.setCenter(menuLayout);
+
+        mainMenuScene = new Scene(root, 800, 600);
+    }
+
+    private Slider createVolumeSlider() {
         Slider volumeSlider = new Slider(0, 1, 0.5);
         volumeSlider.setMajorTickUnit(0.1);
         volumeSlider.setMinorTickCount(1);
@@ -197,27 +216,20 @@ public class Main extends Application {
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             mediaPlayer.setVolume(newValue.doubleValue());
         });
+        return volumeSlider;
+    }
 
-        // Create volume label
+    private Label createVolumeLabel() {
         Label volumeLabel = new Label("Music Volume");
         volumeLabel.setTextFill(Color.WHITE);
+        return volumeLabel;
+    }
 
-        // Create volume container
+    private HBox createVolumeContainer(Label volumeLabel, Slider volumeSlider) {
         HBox volumeContainer = new HBox(10);
         volumeContainer.setAlignment(Pos.CENTER);
         volumeContainer.getChildren().addAll(volumeLabel, volumeSlider);
-
-        // Add buttons to menu layout
-        menuLayout.getChildren().addAll(
-                startButton, howToPlayButton, enemiesInfoButton,
-                itemsInfoButton, exitButton,
-                volumeContainer
-        );
-        // Add menu layout to root
-        root.setCenter(menuLayout);
-
-        // Create scene
-        mainMenuScene = new Scene(root, 800, 600);
+        return volumeContainer;
     }
 
     private void createGameplayScene() {
@@ -226,4 +238,11 @@ public class Main extends Application {
         gameplayScene = new Scene(gameplayLayout, WIDTH, HEIGHT);
     }
 
+    private void addSceneListeners(Scene scene) {
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                setGameState(GameState.MAIN_MENU);
+            }
+        });
+    }
 }
