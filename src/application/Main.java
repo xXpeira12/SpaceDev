@@ -5,6 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
@@ -192,12 +194,30 @@ public class Main extends Application {
         Button exitButton = createMenuButton("Exit");
         exitButton.setOnAction(e -> primaryStage.close());
 
+        Slider volumeSlider = new Slider(0, 1, 0.5);
+        volumeSlider.setMajorTickUnit(0.1);
+        volumeSlider.setMinorTickCount(1);
+        volumeSlider.setShowTickLabels(true);
+        volumeSlider.setShowTickMarks(true);
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            mediaPlayer.setVolume(newValue.doubleValue());
+        });
+
+        // Create volume label
+        Label volumeLabel = new Label("Volume");
+        volumeLabel.setTextFill(Color.WHITE);
+
+        // Create volume container
+        HBox volumeContainer = new HBox(10);
+        volumeContainer.setAlignment(Pos.CENTER);
+        volumeContainer.getChildren().addAll(volumeLabel, volumeSlider);
+
         // Add buttons to menu layout
         menuLayout.getChildren().addAll(
                 startButton, howToPlayButton, enemiesInfoButton,
-                itemsInfoButton, highScoresButton, exitButton
+                itemsInfoButton, highScoresButton, exitButton,
+                volumeContainer
         );
-
         // Add menu layout to root
         root.setCenter(menuLayout);
 
@@ -214,4 +234,5 @@ public class Main extends Application {
     public void showMainMenu() {
         primaryStage.setScene(mainMenuScene);
     }
+
 }
