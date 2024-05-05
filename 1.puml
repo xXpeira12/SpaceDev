@@ -1,0 +1,306 @@
+@startuml
+interface ability.Drawable {
+~ void draw()
+}
+class entity.Item.BoostShotItem {
+- Rocket.RocketStatus STATUS
++ <<Create>> BoostShotItem(int,int,int,int)
++ boolean collide(Rocket)
+}
+class entity.rocket.Rocket {
+- int explosionsStep
+- RocketStatus status
+- int powerUpTimer
++ <<Create>> Rocket(int,int,int,Image)
++ Shot shoot()
++ void update()
++ void draw()
++ void explode()
++ boolean collide(Bomb)
++ int getExplosionsStep()
++ void setExplosionsStep(int)
++ void setStatus(RocketStatus)
++ RocketStatus getStatus()
+}
+enum entity.rocket.RocketStatus {
++  SPEED
++  BIG
++  SPREAD
++  FREEZE
++  NORMAL
+}
+class entity.shot.SpreadShot {
+- int numShots
+- SpeedShot[] shots
+- int spaceBetweenShot
++ <<Create>> SpreadShot(int,int,int,int)
++ int getNumShots()
++ void setNumShots(int)
++ SpeedShot[] getShots()
++ void setShots(SpeedShot[])
++ int getSpaceBetweenShot()
++ void setSpaceBetweenShot(int)
+}
+class config.Config {
++ {static} int WIDTH
++ {static} int HEIGHT
++ {static} int PLAYER_SIZE
++ {static} Image PLAYER_IMG
++ {static} Image EXPLOSION_IMG
++ {static} int EXPLOSION_W
++ {static} int EXPLOSION_ROWS
++ {static} int EXPLOSION_COLS
++ {static} int EXPLOSION_H
++ {static} int EXPLOSION_STEPS
++ {static} int INITIAL_SCORE
++ {static} int BASE_SHOT_SIZE
++ {static} int BIG_SHOT_SIZE
++ {static} int SPEED_SHOT_SIZE
++ {static} int POWER_UP_DURATION
++ {static} int ITEM_DROP_SPEED
++ {static} Image[] BOMBS_IMG
++ {static} Image[] BoostShot_IMG
++ {static} int MAX_BOMBS
++ {static} int MAX_SHOTS
++ {static} int BASESHOT_SPEED
++ {static} int BASESHOT_SIZE
++ {static} int BASESHOT_DAMAGE
++ {static} int PADDING_BOMB
++ {static} int PADDING_ROCKET
++ {static} int BOSS_SHOT_SPEED
++ {static} int BIGSHOT_DAMAGE
++ {static} int BIGSHOT_SPEED
++ {static} int BIGSHOT_SIZE
++ {static} int SPEEDSHOT_SPEED
++ {static} int SPEEDSHOT_SIZE
++ {static} int SPEEDSHOT_DAMAGE
++ {static} int SHOTS_PER_SHOOT
++ {static} int SPACE_BETWEEN_SHOT
++ {static} int REDUCE_SPEED
++ {static} int BASE_BOMB_SPEED_FACTOR
++ {static} int BASE_BOMB_BASE_SPEED
++ {static} int BIG_BOMB_SPEED_FACTOR
++ {static} int BIG_BOMB_BASE_SPEED
++ {static} int FAST_BOMB_SPEED_FACTOR
++ {static} int FAST_BOMB_BASE_SPEED
++ {static} int BOSS_BOMB_SPEED_FACTOR
++ {static} int BOSS_BOMB_BASE_SPEED
++ {static} double DEFAULT_SFX_VOLUME
+}
+abstract class entity.shot.Shot {
+- boolean isRemove
+- int speed
+- int damage
++ <<Create>> Shot(int,int,int,Image)
++ {abstract}boolean collide(Bomb)
++ {abstract}boolean collide(Rocket)
++ {abstract}void dealDamage(Bomb)
++ boolean isRemove()
++ void setIsRemove(boolean)
++ int getSpeed()
++ void setSpeed(int)
++ int getDamage()
++ void setDamage(int)
++ void draw()
++ void update()
+}
+abstract class entity.Item.Item {
++ <<Create>> Item(int,int,int,Image)
++ void update()
++ void draw()
++ {abstract}boolean collide(Rocket)
+}
+abstract class entity.bomb.Bomb {
+- int explosionsStep
+- int speed
+- int health
++ <<Create>> Bomb(int,int,int,Image,int)
++ void update()
++ void draw()
++ void explode()
++ int getExplosionsStep()
++ void setExplosionsStep(int)
++ int getHealth()
++ void setHealth(int)
++ int getSpeed()
++ void setSpeed(int)
+# {abstract}int calculateSpeed()
+}
+class entity.bomb.FastBomb {
++ <<Create>> FastBomb(int,int,int,Image,int)
+# int calculateSpeed()
+}
+class application.Universe {
+- int posX
+- int posY
+- int h
+- double opacity
++ <<Create>> Universe()
++ void draw()
++ int getPosX()
++ void setPosX(int)
++ int getPosY()
++ void setPosY(int)
++ int getH()
++ void setH(int)
++ int getW()
++ void setW(int)
++ int getR()
++ void setR(int)
++ int getG()
++ void setG(int)
++ int getB()
++ void setB(int)
++ double getOpacity()
++ void setOpacity(double)
+}
+class entity.bomb.BigBomb {
++ <<Create>> BigBomb(int,int,int,Image,int)
+# int calculateSpeed()
+}
+class application.Main {
+- Stage primaryStage
+- MediaPlayer mediaPlayer
+- GameState gameState
+- Scene mainMenuScene
+- Scene gameplayScene
++ {static} void main(String[])
++ void start(Stage)
++ void setGameState(GameState)
+- void showInfoScene(GameState)
+- String getImageFile(GameState)
+- Scene createInfoScene(String)
+- Background createSpaceBackground()
+- Button createMenuButton(String)
+- void startGame()
++ void stop()
++ void createMainMenuScene()
+- Slider createVolumeSlider()
+- Label createVolumeLabel()
+- HBox createVolumeContainer(Label,Slider)
+- void createGameplayScene()
+- void addSceneListeners(Scene)
+}
+interface ability.Updatable {
+~ void update()
+}
+class entity.shot.FreezeShot {
+- int reduceSpeed
++ <<Create>> FreezeShot(int,int,int)
++ void dealDamage(Bomb)
++ void slowTarget(Bomb)
+}
+enum application.GameState {
++  MAIN_MENU
++  PLAYING
++  HOW_TO_PLAY
++  ENEMIES_INFO
++  ITEMS_INFO
+}
+class entity.shot.SpeedShot {
++ <<Create>> SpeedShot(int,int)
+}
+class entity.bomb.BaseBomb {
++ <<Create>> BaseBomb(int,int,int,Image,int)
+# int calculateSpeed()
+}
+class entity.shot.BaseShot {
++ <<Create>> BaseShot(int,int)
++ boolean collide(Bomb)
++ boolean collide(Rocket)
++ void drawBombShot()
++ void updateBombShot()
++ void dealDamage(Bomb)
+}
+class entity.shot.BigShot {
++ <<Create>> BigShot(int,int)
+}
+class application.GamePlay {
++ {static} Random RAND
+~ boolean gameOver
++ {static} GraphicsContext gc
++ {static} Rocket player
+~ List<Shot> shots
+~ List<Universe> univ
+~ List<Bomb> bombs
+~ List<Item> items
++ {static} int score
+- boolean left
+- boolean shotFired
+- int counter
+- boolean isPaused
+- MediaPlayer shootingMediaPlayer
+- MediaPlayer explosionMediaPlayer
+- MediaPlayer dropItemMediaPlayer
++ void start(Stage)
+- void setUp()
+- void run(GraphicsContext)
+- void clearScreen(GraphicsContext)
+- void displayScore(GraphicsContext)
+- void displayCurrentGun(GraphicsContext)
+- void drawUniverse()
+- void updatePlayer()
+- void handlePlayerShooting()
+- void checkCollisions()
+- void updateBombs()
+- void updateItems()
+- void spawnBossBomb()
+- void updateBossBombShots()
+- void spawnUniverse()
+- void removeOffscreenUniverse()
+- void displayGameOver(GraphicsContext)
+- void displayPauseMenu(GraphicsContext)
+}
+class entity.bomb.BossBomb {
+- List<BaseShot> shots
++ <<Create>> BossBomb(int,int,int,Image,int)
++ List<BaseShot> getShots()
++ void shot()
+# int calculateSpeed()
+}
+abstract class entity.Entity {
+# int posX
+# int posY
+# int size
+# boolean exploding
+# boolean isDestroyed
+# Image img
++ <<Create>> Entity(int,int,int,Image)
++ {abstract}void update()
++ {abstract}void draw()
++ int getPosX()
++ void setPosX(int)
++ int getPosY()
++ void setPosY(int)
++ int getSize()
++ void setSize(int)
++ boolean isExploding()
++ void setExploding(boolean)
++ boolean isDestroyed()
++ void setDestroyed(boolean)
++ Image getImg()
++ void setImg(Image)
++ int distance(int,int,int,int)
+}
+
+
+entity.Item.Item <|-- entity.Item.BoostShotItem
+entity.Entity <|-- entity.rocket.Rocket
+entity.shot.SpeedShot <|-- entity.shot.SpreadShot
+entity.Entity <|-- entity.shot.Shot
+entity.Entity <|-- entity.Item.Item
+entity.Entity <|-- entity.bomb.Bomb
+entity.bomb.Bomb <|-- entity.bomb.FastBomb
+ability.Drawable <|.. application.Universe
+entity.bomb.Bomb <|-- entity.bomb.BigBomb
+javafx.application.Application <|-- application.Main
+entity.shot.BigShot <|-- entity.shot.FreezeShot
+entity.shot.BaseShot <|-- entity.shot.SpeedShot
+entity.bomb.Bomb <|-- entity.bomb.BaseBomb
+entity.shot.Shot <|-- entity.shot.BaseShot
+entity.shot.BaseShot <|-- entity.shot.BigShot
+javafx.application.Application <|-- application.GamePlay
+entity.bomb.Bomb <|-- entity.bomb.BossBomb
+ability.Drawable <|.. entity.Entity
+ability.Updatable <|.. entity.Entity
+@enduml
