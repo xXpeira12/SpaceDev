@@ -13,6 +13,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -22,11 +24,14 @@ import entity.rocket.Rocket;
 import entity.shot.Shot;
 import entity.shot.SpreadShot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
+import javafx.scene.media.AudioClip;
+
 
 import static config.Config.*;
 
@@ -195,18 +200,29 @@ public class GamePlay extends Application {
 
     private void handlePlayerShooting() {
         if (shoot && !shotFired && shots.size() < MAX_SHOTS) {
+
             if (player.shoot() instanceof SpreadShot) {
                 Collections.addAll(shots, new SpreadShot(player.shoot().getPosX(), player.shoot().getPosY(), ((SpreadShot) player.shoot()).getNumShots(), ((SpreadShot) player.shoot()).getSpaceBetweenShot()).getShots());
             } else {
                 shots.add(player.shoot());
             }
             shotFired = true;
+            // add shot sound
+            String shotSoundStr = "assets/space_sound.mp3"; // Adjust the path to your background music file
+            Media  shotSound = new Media(new File(shotSoundStr).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(shotSound);
+            mediaPlayer.play(); // Start playing the background music
         }
     }
 
     private void checkCollisions() {
         bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
             if (player.collide(e) && !player.isExploding()) {
+                // add shot sound
+                String shotSoundStr = "assets/space_sound.mp3"; // Adjust the path to your background music file
+                Media  shotSound = new Media(new File(shotSoundStr).toURI().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(shotSound);
+                mediaPlayer.play(); // Start playing the background music
                 player.explode();
             }
         });
@@ -223,6 +239,8 @@ public class GamePlay extends Application {
                 if (shot.collide(bomb) && !bomb.isExploding()) {
                     shot.dealDamage(bomb);
                     if (bomb.getHealth() <= 0) {
+//                        AudioClip collisionSound = new AudioClip(getClass().getResource("assets/shoot_sound.mp3").toExternalForm());
+//                        collisionSound.play();
                         bomb.setDestroyed(true);
                         score++;
                         bomb.explode();

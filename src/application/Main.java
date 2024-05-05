@@ -39,6 +39,7 @@ public class Main extends Application {
         Media backgroundMusicMedia = new Media(new File(backgroundMusicFile).toURI().toString());
         mediaPlayer = new MediaPlayer(backgroundMusicMedia);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the background music
+        mediaPlayer.setMute(true);
         mediaPlayer.play(); // Start playing the background music
 
         // Create main menu layout
