@@ -214,9 +214,10 @@ public class GamePlay extends Application {
                 shots.add(player.shoot());
             }
             shotFired = true;
-
-            shootingMediaPlayer.stop();
-            shootingMediaPlayer.play();
+            new Thread(() -> {
+                shootingMediaPlayer.stop();
+                shootingMediaPlayer.play();
+            }).start();
         }
     }
 
@@ -224,8 +225,10 @@ public class GamePlay extends Application {
         bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
             if (player.collide(e) && !player.isExploding()) {
                 player.explode();
-                explosionMediaPlayer.stop();
-                explosionMediaPlayer.play();
+                new Thread(() -> {
+                    explosionMediaPlayer.stop();
+                    explosionMediaPlayer.play();
+                }).start();
             }
         });
 
@@ -250,8 +253,10 @@ public class GamePlay extends Application {
                         if (randomDropItem < 4) {
                             items.add(new BoostShotItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, randomDropItem));
                         }
-                        explosionMediaPlayer.stop();
-                        explosionMediaPlayer.play();
+                        new Thread(() -> {
+                            explosionMediaPlayer.stop();
+                            explosionMediaPlayer.play();
+                        }).start();
                     }
                     shot.setIsRemove(true);
                 }
@@ -288,8 +293,10 @@ public class GamePlay extends Application {
                 items.remove(i);
                 gc.setFill(Color.WHITE);
                 gc.fillText("Item Collected", item.getPosX(), item.getPosY());
-                dropItemMediaPlayer.stop();
-                dropItemMediaPlayer.play();
+                new Thread(() -> {
+                    dropItemMediaPlayer.stop();
+                    dropItemMediaPlayer.play();
+                }).start();
             }
         }
     }
@@ -306,6 +313,10 @@ public class GamePlay extends Application {
             for (Bomb bomb : bombs) {
                 if (bomb instanceof BossBomb bossBomb) {
                     bossBomb.shot();
+                    new Thread(() -> {
+                        shootingMediaPlayer.stop();
+                        shootingMediaPlayer.play();
+                    }).start();
                     counter = 0;
                 }
             }
@@ -319,6 +330,10 @@ public class GamePlay extends Application {
 
                     if (shot.collide(player)) {
                         player.explode();
+                        new Thread(() -> {
+                            explosionMediaPlayer.stop();
+                            explosionMediaPlayer.play();
+                        }).start();
                     }
                     gameOver = player.isDestroyed();
                     if (gameOver) {
