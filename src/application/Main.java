@@ -24,7 +24,6 @@ public class Main extends Application {
     private GameState gameState;
     private Scene mainMenuScene;
     private Scene gameplayScene;
-    private Scene pauseMenuScene;
 
 
     public static void main(String[] args) {
@@ -38,25 +37,27 @@ public class Main extends Application {
 
         createMainMenuScene();
         createGameplayScene();
-        createPauseMenuScene();
 
         gameState = GameState.MAIN_MENU;
         primaryStage.setScene(mainMenuScene);
         primaryStage.show();
     }
 
-    private void setGameState(GameState state) {
+    public void setGameState(GameState state) {
+        System.out.println("Changing game state to " + state + "from " + gameState);
+        GameState prevGameState = gameState;
         gameState = state;
         switch (gameState) {
             case MAIN_MENU:
                 primaryStage.setScene(mainMenuScene);
                 break;
             case PLAYING:
-                primaryStage.setScene(gameplayScene);
-                startGame();
+                if (prevGameState == GameState.MAIN_MENU) {
+                    primaryStage.setScene(gameplayScene);
+                    startGame();
+                }
                 break;
-            case PAUSED:
-                primaryStage.setScene(pauseMenuScene);
+            default:
                 break;
         }
     }
@@ -209,45 +210,15 @@ public class Main extends Application {
 
         // Create scene
         mainMenuScene = new Scene(root, 800, 600);
-        setUpKeyEventHandler(mainMenuScene);
     }
 
     private void createGameplayScene() {
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         StackPane gameplayLayout = new StackPane(canvas);
         gameplayScene = new Scene(gameplayLayout, WIDTH, HEIGHT);
-        setUpKeyEventHandler(gameplayScene);
     }
 
-    private void createPauseMenuScene() {
-        VBox pauseLayout = new VBox(20);
-        pauseLayout.setAlignment(Pos.CENTER);
-
-        Button resumeButton = createMenuButton("Resume");
-        resumeButton.setOnAction(e -> setGameState(GameState.PLAYING));
-
-        Button backButton = createMenuButton("Back to Main Menu");
-        backButton.setOnAction(e -> setGameState(GameState.MAIN_MENU));
-
-        pauseLayout.getChildren().addAll(resumeButton, backButton);
-
-        pauseMenuScene = new Scene(pauseLayout, 400, 300);
-        setUpKeyEventHandler(pauseMenuScene);
-    }
-
-    private void setUpKeyEventHandler(Scene scene) {
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                if (gameState == GameState.PLAYING) {
-                    setGameState(GameState.PAUSED);
-                } else if (gameState == GameState.PAUSED) {
-                    setGameState(GameState.MAIN_MENU);
-                }
-            }
-        });
-    }
-
-    public void showMainMenu() {
-        primaryStage.setScene(mainMenuScene);
+    public GameState getGameState() {
+        return gameState;
     }
 }

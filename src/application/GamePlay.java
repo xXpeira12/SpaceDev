@@ -11,7 +11,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.stage.Window;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -43,7 +42,6 @@ public class GamePlay extends Application {
     private boolean left, right, shoot, restart;
     private boolean shotFired;
     private int counter = 0;
-    private boolean isBackMain = false, isPaused = false;
     private Main mainApp;
 
     @Override
@@ -69,8 +67,13 @@ public class GamePlay extends Application {
                     restart = true;
                     break;
                 case ESCAPE:
-                    isPaused = !isPaused;
-                    if (gameOver) isBackMain = true;
+                    if (mainApp.getGameState() == GameState.PLAYING) {
+                        mainApp.setGameState(GameState.PAUSED);
+                    } else if (mainApp.getGameState() == GameState.PAUSED) {
+                        mainApp.setGameState(GameState.PLAYING);
+                    } else if (mainApp.getGameState() == GameState.GAME_OVER) {
+                        mainApp.setGameState(GameState.MAIN_MENU);
+                    }
                     break;
             }
         });
@@ -132,12 +135,12 @@ public class GamePlay extends Application {
         clearScreen(gc);
         displayScore(gc);
         displayCurrentGun(gc);
-
         if (gameOver) {
+            mainApp.setGameState(GameState.GAME_OVER);
             displayGameOver(gc);
             return;
         }
-        if (isPaused) {
+        if (mainApp.getGameState() == GameState.PAUSED) {
             displayPauseMenu(gc);
             return;
         }
@@ -323,12 +326,6 @@ public class GamePlay extends Application {
         if (restart) {
             gameOver = false;
             setUp();
-        } else if (isBackMain) {
-            if (mainApp != null) {
-                mainApp.showMainMenu();
-                isBackMain = false;
-                gameOver = false;
-            }
         } else {
             return;
         }
