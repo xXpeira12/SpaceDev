@@ -35,7 +35,7 @@ public class Main extends Application {
         root.setBackground(createSpaceBackground());
 
         // Load background music
-        String backgroundMusicFile = "/ProgMethAllLecture/SpaceDev/assets/space_song.mp3"; // Adjust the path to your background music file
+        String backgroundMusicFile = "assets/space_song.mp3"; // Adjust the path to your background music file
         Media backgroundMusicMedia = new Media(new File(backgroundMusicFile).toURI().toString());
         mediaPlayer = new MediaPlayer(backgroundMusicMedia);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the background music
