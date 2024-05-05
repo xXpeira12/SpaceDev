@@ -44,7 +44,8 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void setGameState(GameState state) {
+    public void setGameState(GameState state) {
+//        System.out.println("Current game state: " + gameState + "..." + "Setting game state to: " + state);
         gameState = state;
         switch (gameState) {
             case MAIN_MENU:
@@ -147,10 +148,6 @@ public class Main extends Application {
         mediaPlayer.stop();
     }
 
-    public void reduceVolume() {
-        mediaPlayer.setVolume(0.5);
-    }
-
     public void createMainMenuScene() {
         // Create root layout
         BorderPane root = new BorderPane();
@@ -204,7 +201,7 @@ public class Main extends Application {
         });
 
         // Create volume label
-        Label volumeLabel = new Label("Volume");
+        Label volumeLabel = new Label("Music Volume");
         volumeLabel.setTextFill(Color.WHITE);
 
         // Create volume container
