@@ -11,7 +11,7 @@ public abstract class Entity implements Drawable, Updatable {
     protected int posY;
     protected int size;
     protected boolean exploding;
-    protected boolean destroyed;
+    protected boolean isDestroyed;
     protected Image img;
 
     public Entity(int posX, int posY, int size, Image image) {
@@ -58,11 +58,11 @@ public abstract class Entity implements Drawable, Updatable {
     }
 
     public boolean isDestroyed() {
-        return destroyed;
+        return isDestroyed;
     }
 
-    public void setDestroyed(boolean destroyed) {
-        this.destroyed = destroyed;
+    public void setDestroyed(boolean isDestroyed) {
+        this.isDestroyed = isDestroyed;
     }
 
     public Image getImg() {
