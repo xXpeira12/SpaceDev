@@ -49,6 +49,7 @@ public class GamePlay extends Application {
     private Main mainApp;
     private MediaPlayer shootingMediaPlayer;
     private MediaPlayer explosionMediaPlayer;
+    private MediaPlayer dropItemMediaPlayer;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -138,6 +139,10 @@ public class GamePlay extends Application {
         Media explosionSound = new Media(new File("assets/explosion_sound.mp3").toURI().toString());
         explosionMediaPlayer = new MediaPlayer(explosionSound);
         explosionMediaPlayer.setVolume(DEFAULT_SFX_VOLUME);
+
+        Media dropItemSound = new Media(new File("assets/dropItem_sound.mp3").toURI().toString());
+        dropItemMediaPlayer = new MediaPlayer(dropItemSound);
+        dropItemMediaPlayer.setVolume(DEFAULT_SFX_VOLUME);
     }
 
     private void run(GraphicsContext gc) {
@@ -285,6 +290,8 @@ public class GamePlay extends Application {
                 items.remove(i);
                 gc.setFill(Color.WHITE);
                 gc.fillText("Item Collected", item.getPosX(), item.getPosY());
+                dropItemMediaPlayer.stop();
+                dropItemMediaPlayer.play();
             }
         }
     }
