@@ -11,7 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.BorderPane;
+import javafx.stage.Window;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -40,9 +40,11 @@ public class GamePlay extends Application {
     List<Bomb> bombs;
     List<Item> items;
     public static int score;
-    private boolean left, right, shoot, restart, back;
+    private boolean left, right, shoot, restart;
     private boolean shotFired;
-    int counter = 0;
+    private int counter = 0;
+    private boolean isBackMain = false, isPaused = false;
+    private Main mainApp;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -67,7 +69,8 @@ public class GamePlay extends Application {
                     restart = true;
                     break;
                 case ESCAPE:
-                    back = true;
+                    isPaused = !isPaused;
+                    if (gameOver) isBackMain = true;
                     break;
             }
         });
@@ -86,9 +89,6 @@ public class GamePlay extends Application {
                     break;
                 case ENTER:
                     restart = false;
-                    break;
-                case ESCAPE:
-                    back = false;
                     break;
             }
         });
@@ -137,6 +137,10 @@ public class GamePlay extends Application {
             displayGameOver(gc);
             return;
         }
+        if (isPaused) {
+            displayPauseMenu(gc);
+            return;
+        }
 
         drawUniverse();
         updatePlayer();
@@ -166,16 +170,6 @@ public class GamePlay extends Application {
 
     private void displayCurrentGun(GraphicsContext gc) {
         gc.fillText("Current Gun: " + player.getStatus(), WIDTH / 2.0, 20);
-    }
-
-    private void displayGameOver(GraphicsContext gc) {
-        gc.setFont(Font.font(35));
-        gc.setFill(Color.YELLOW);
-        gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again \n Press ESC to return to Main Menu", WIDTH / 2.0, HEIGHT / 2.5);
-        if (restart) {
-            gameOver = false;
-            setUp();
-        }
     }
 
     private void drawUniverse() {
@@ -324,5 +318,33 @@ public class GamePlay extends Application {
                 univ.remove(i);
             }
         }
+    }
+
+    private void displayGameOver(GraphicsContext gc) {
+        gc.setFont(Font.font(35));
+        gc.setFill(Color.YELLOW);
+        gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again \n Press ESC to return to Main Menu", WIDTH / 2.0, HEIGHT / 2.5);
+        if (restart) {
+            gameOver = false;
+            setUp();
+        } else if (isBackMain) {
+            if (mainApp != null) {
+                mainApp.showMainMenu();
+                isBackMain = false;
+                gameOver = false;
+            }
+        } else {
+            return;
+        }
+    }
+
+    private void displayPauseMenu(GraphicsContext gc) {
+        gc.setFont(Font.font(35));
+        gc.setFill(Color.YELLOW);
+        gc.fillText("Paused \n Press ESC to resume", WIDTH / 2.0, HEIGHT / 2.5);
+    }
+
+    public void setMainApp(Main mainApp) {
+        this.mainApp = mainApp;
     }
 }

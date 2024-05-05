@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -13,13 +14,16 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import static config.Config.*;
-import java.io.File;
 
+import java.io.File;
 
 public class Main extends Application {
 
     private Stage primaryStage;
     private MediaPlayer mediaPlayer;
+    private GameState gameState;
+    private Scene mainMenuScene;
+    private Scene gameplayScene;
 
     public static void main(String[] args) {
         launch(args);
@@ -30,62 +34,25 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Space Menu Game");
 
-        // Create root layout
-        BorderPane root = new BorderPane();
-        root.setBackground(createSpaceBackground());
+        createMainMenuScene();
+        createGameplayScene();
 
-        // Load background music
-        String backgroundMusicFile = "assets/space_song.mp3"; // Adjust the path to your background music file
-        Media backgroundMusicMedia = new Media(new File(backgroundMusicFile).toURI().toString());
-        mediaPlayer = new MediaPlayer(backgroundMusicMedia);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the background music
-        mediaPlayer.play(); // Start playing the background music
-
-        // Create main menu layout
-        VBox menuLayout = new VBox(20);
-        menuLayout.setAlignment(Pos.CENTER);
-        menuLayout.setMinWidth(400);
-
-        // Create buttons
-        Button startButton = createMenuButton("Start Game");
-        startButton.setOnAction(e -> {
-            try {
-//                playButtonClickSound(); // Play button click sound
-                startGame();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
-        Button howToPlayButton = createMenuButton("How to Play");
-        howToPlayButton.setOnAction(e -> showHowToPlay());
-
-        Button enemiesInfoButton = createMenuButton("Enemies Info");
-        enemiesInfoButton.setOnAction(e -> showEnemiesInfo());
-
-        Button itemsInfoButton = createMenuButton("Item & Enhancement Info");
-        itemsInfoButton.setOnAction(e -> showItemsInfo());
-
-        Button highScoresButton = createMenuButton("High Scores");
-        highScoresButton.setOnAction(e -> showHighScores());
-
-        Button exitButton = createMenuButton("Exit");
-        exitButton.setOnAction(e -> primaryStage.close());
-
-        // Add buttons to menu layout
-        menuLayout.getChildren().addAll(
-                startButton, howToPlayButton, enemiesInfoButton,
-                itemsInfoButton, highScoresButton, exitButton
-        );
-
-        // Add menu layout to root
-        root.setCenter(menuLayout);
-
-        // Create scene
-        Scene scene = new Scene(root, 800, 600);
-        primaryStage.setScene(scene);
-
+        gameState = GameState.MAIN_MENU;
+        primaryStage.setScene(mainMenuScene);
         primaryStage.show();
+    }
+
+    private void setGameState(GameState state) {
+        gameState = state;
+        switch (gameState) {
+            case MAIN_MENU:
+                primaryStage.setScene(mainMenuScene);
+                break;
+            case PLAYING:
+                primaryStage.setScene(gameplayScene);
+                startGame();
+                break;
+        }
     }
 
     private Background createSpaceBackground() {
@@ -142,24 +109,15 @@ public class Main extends Application {
     }
 
 
-
-    private void startGame() throws Exception {
+    private void startGame() {
         System.out.println("Starting the game!");
         GamePlay gamePlay = new GamePlay();
-
-        // Create a new scene for the game play
-        Scene gameScene = new Scene(new StackPane(), WIDTH, HEIGHT);
-
-        // Set up the game canvas
-        Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        StackPane gamePane = new StackPane(canvas);
-        gameScene.setRoot(gamePane);
-
-        // Switch to the game scene
-        primaryStage.setScene(gameScene);
-
-        // Start the game
-        gamePlay.start(primaryStage);
+        try {
+            gamePlay.setMainApp(this);
+            gamePlay.start(primaryStage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void showHowToPlay() {
@@ -182,16 +140,78 @@ public class Main extends Application {
         // Implement high scores display
     }
 
-//    private void playButtonClickSound() {
-//        String buttonClickSoundFile = "space_song.mp3"; // Adjust the path to your button click sound file
-//        Media buttonClickMedia = new Media(new File(buttonClickSoundFile).toURI().toString());
-//        MediaPlayer buttonClickPlayer = new MediaPlayer(buttonClickMedia);
-//        buttonClickPlayer.play(); // Play the button click sound
-//    }
-
     @Override
     public void stop() {
-        mediaPlayer.stop(); // Stop the background music when the application exits
+        mediaPlayer.stop();
     }
 
+    public void reduceVolume() {
+        mediaPlayer.setVolume(0.5);
+    }
+
+    public void createMainMenuScene() {
+        // Create root layout
+        BorderPane root = new BorderPane();
+        root.setBackground(createSpaceBackground());
+
+        // Load background music
+        String backgroundMusicFile = "assets/space_song.mp3";
+        Media backgroundMusicMedia = new Media(new File(backgroundMusicFile).toURI().toString());
+        mediaPlayer = new MediaPlayer(backgroundMusicMedia);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(0.5);
+        mediaPlayer.play();
+
+        // Create main menu layout
+        VBox menuLayout = new VBox(20);
+        menuLayout.setAlignment(Pos.CENTER);
+        menuLayout.setMinWidth(400);
+
+        // Create buttons
+        Button startButton = createMenuButton("Start Game");
+        startButton.setOnAction(e -> {
+            try {
+                setGameState(GameState.PLAYING);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        Button howToPlayButton = createMenuButton("How to Play");
+        howToPlayButton.setOnAction(e -> showHowToPlay());
+
+        Button enemiesInfoButton = createMenuButton("Enemies Info");
+        enemiesInfoButton.setOnAction(e -> showEnemiesInfo());
+
+        Button itemsInfoButton = createMenuButton("Item & Enhancement Info");
+        itemsInfoButton.setOnAction(e -> showItemsInfo());
+
+        Button highScoresButton = createMenuButton("High Scores");
+        highScoresButton.setOnAction(e -> showHighScores());
+
+        Button exitButton = createMenuButton("Exit");
+        exitButton.setOnAction(e -> primaryStage.close());
+
+        // Add buttons to menu layout
+        menuLayout.getChildren().addAll(
+                startButton, howToPlayButton, enemiesInfoButton,
+                itemsInfoButton, highScoresButton, exitButton
+        );
+
+        // Add menu layout to root
+        root.setCenter(menuLayout);
+
+        // Create scene
+        mainMenuScene = new Scene(root, 800, 600);
+    }
+
+    private void createGameplayScene() {
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
+        StackPane gameplayLayout = new StackPane(canvas);
+        gameplayScene = new Scene(gameplayLayout, WIDTH, HEIGHT);
+    }
+
+    public void showMainMenu() {
+        primaryStage.setScene(mainMenuScene);
+    }
 }
