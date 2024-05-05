@@ -12,7 +12,7 @@ import static config.Config.BOSS_BOMB_SPEED_FACTOR;
 
 public class BossBomb extends Bomb {
 
-    private final List<BaseShot> shots = new ArrayList<>();
+    private List<BaseShot> shots = new ArrayList<>();
 
     public BossBomb(int posX, int posY, int size, Image img, int health) {
         super(posX, posY, size, img, health);

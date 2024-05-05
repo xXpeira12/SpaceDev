@@ -11,7 +11,8 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.stage.Window;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,6 +23,7 @@ import entity.rocket.Rocket;
 import entity.shot.Shot;
 import entity.shot.SpreadShot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +47,8 @@ public class GamePlay extends Application {
     private int counter = 0;
     private boolean isBackMain = false, isPaused = false;
     private Main mainApp;
+    private MediaPlayer shootingMediaPlayer;
+    private MediaPlayer explosionMediaPlayer;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -126,6 +130,13 @@ public class GamePlay extends Application {
             }
             bombs.add(bomb);
         });
+
+        Media shootingSound = new Media(new File("assets/shoot_sound.mp3").toURI().toString());
+        shootingMediaPlayer = new MediaPlayer(shootingSound);
+
+        Media explosionSound = new Media(new File("assets/explosion_sound.mp3").toURI().toString());
+        explosionMediaPlayer = new MediaPlayer(explosionSound);
+        explosionMediaPlayer.setVolume(0.1);
     }
 
     private void run(GraphicsContext gc) {
@@ -199,6 +210,9 @@ public class GamePlay extends Application {
                 shots.add(player.shoot());
             }
             shotFired = true;
+
+            shootingMediaPlayer.stop();
+            shootingMediaPlayer.play();
         }
     }
 
@@ -206,6 +220,8 @@ public class GamePlay extends Application {
         bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
             if (player.collide(e) && !player.isExploding()) {
                 player.explode();
+                explosionMediaPlayer.stop();
+                explosionMediaPlayer.play();
             }
         });
 
@@ -230,6 +246,8 @@ public class GamePlay extends Application {
                         if (randomDropItem < 4) {
                             items.add(new BoostShotItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, randomDropItem));
                         }
+                        explosionMediaPlayer.stop();
+                        explosionMediaPlayer.play();
                     }
                     shot.setIsRemove(true);
                 }
