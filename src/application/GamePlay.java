@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -50,8 +51,11 @@ public class GamePlay extends Application {
     private double mouseX;
     public static int score;
 
+    private Stage primaryStage;
+
     @Override
     public void start(Stage stage) throws Exception {
+        primaryStage = stage;
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         gc = canvas.getGraphicsContext2D();
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000.0 / 60), e -> run(gc)));
@@ -66,6 +70,7 @@ public class GamePlay extends Application {
                 setUp();
             }
         });
+        canvas.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
         setUp();
         stage.setScene(new Scene(new StackPane(canvas)));
         stage.setTitle("Space");
@@ -94,6 +99,7 @@ public class GamePlay extends Application {
             gc.fillText("Game Over \n Your Score is: " + score + " \n Click to play again", WIDTH / 2, HEIGHT / 2.5);
             return;
         }
+
 
         univ.forEach(Universe::draw);
 
@@ -137,6 +143,17 @@ public class GamePlay extends Application {
         for (int i = 0; i < univ.size(); i++) {
             if (univ.get(i).getPosY() > HEIGHT) {
                 univ.remove(i);
+            }
+        }
+    }
+    private void handleKeyPress(KeyCode code) {
+        if (gameOver) {
+            // Return to menu
+            Main main = new Main();
+            try {
+                main.start(primaryStage);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
