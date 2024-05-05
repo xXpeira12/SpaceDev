@@ -186,10 +186,14 @@ public class GamePlay extends Application {
         player.update();
         player.draw();
         if (left) {
-            player.setPosX(player.getPosX() - 5);
+            if(player.getPosX() > PADDING_ROCKET) {
+                player.setPosX(player.getPosX() - 5);
+            }
         }
         if (right) {
-            player.setPosX(player.getPosX() + 5);
+            if(player.getPosX() < (WIDTH - PLAYER_SIZE)) {
+                player.setPosX(player.getPosX() + 5);
+            }
         }
     }
 

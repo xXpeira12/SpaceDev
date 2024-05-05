@@ -28,6 +28,7 @@ public class Config {
     public static final int BASESHOT_SIZE = 6;
     public static final int BASESHOT_DAMAGE = 2;
     public static final int PADDING_BOMB = 30;
+    public static final int PADDING_ROCKET = 5;
     public static final int BOSS_SHOT_SPEED = 4;
     public static final int BIGSHOT_DAMAGE = 5;
     public static final int BIGSHOT_SPEED = 3;
