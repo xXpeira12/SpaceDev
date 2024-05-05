@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 import static config.Config.*;
@@ -49,6 +51,7 @@ public class GamePlay extends Application {
     private MediaPlayer shootingMediaPlayer;
     private MediaPlayer explosionMediaPlayer;
     private MediaPlayer dropItemMediaPlayer;
+    private ExecutorService mediaPlayerExecutor;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -101,6 +104,7 @@ public class GamePlay extends Application {
         setUp();
         stage.setScene(new Scene(new StackPane(canvas)));
         stage.setTitle("Space");
+        mediaPlayerExecutor = Executors.newFixedThreadPool(3);
         stage.show();
     }
 
@@ -214,10 +218,12 @@ public class GamePlay extends Application {
                 shots.add(player.shoot());
             }
             shotFired = true;
-            new Thread(() -> {
-                shootingMediaPlayer.stop();
-                shootingMediaPlayer.play();
-            }).start();
+            mediaPlayerExecutor.submit(() -> {
+                synchronized (shootingMediaPlayer) {
+                    shootingMediaPlayer.stop();
+                    shootingMediaPlayer.play();
+                }
+            });
         }
     }
 
@@ -225,10 +231,12 @@ public class GamePlay extends Application {
         bombs.stream().peek(Bomb::update).peek(Bomb::draw).forEach(e -> {
             if (player.collide(e) && !player.isExploding()) {
                 player.explode();
-                new Thread(() -> {
-                    explosionMediaPlayer.stop();
-                    explosionMediaPlayer.play();
-                }).start();
+                mediaPlayerExecutor.submit(() -> {
+                    synchronized (explosionMediaPlayer) {
+                        explosionMediaPlayer.stop();
+                        explosionMediaPlayer.play();
+                    }
+                });
             }
         });
 
@@ -253,10 +261,12 @@ public class GamePlay extends Application {
                         if (randomDropItem < 4) {
                             items.add(new BoostShotItem(bomb.getPosX(), bomb.getPosY(), PLAYER_SIZE / 2, randomDropItem));
                         }
-                        new Thread(() -> {
-                            explosionMediaPlayer.stop();
-                            explosionMediaPlayer.play();
-                        }).start();
+                        mediaPlayerExecutor.submit(() -> {
+                            synchronized (explosionMediaPlayer) {
+                                explosionMediaPlayer.stop();
+                                explosionMediaPlayer.play();
+                            }
+                        });
                     }
                     shot.setIsRemove(true);
                 }
@@ -293,10 +303,12 @@ public class GamePlay extends Application {
                 items.remove(i);
                 gc.setFill(Color.WHITE);
                 gc.fillText("Item Collected", item.getPosX(), item.getPosY());
-                new Thread(() -> {
-                    dropItemMediaPlayer.stop();
-                    dropItemMediaPlayer.play();
-                }).start();
+                mediaPlayerExecutor.submit(() -> {
+                    synchronized (dropItemMediaPlayer) {
+                        dropItemMediaPlayer.stop();
+                        dropItemMediaPlayer.play();
+                    }
+                });
             }
         }
     }
@@ -313,10 +325,12 @@ public class GamePlay extends Application {
             for (Bomb bomb : bombs) {
                 if (bomb instanceof BossBomb bossBomb) {
                     bossBomb.shot();
-                    new Thread(() -> {
-                        shootingMediaPlayer.stop();
-                        shootingMediaPlayer.play();
-                    }).start();
+                    mediaPlayerExecutor.submit(() -> {
+                        synchronized (shootingMediaPlayer) {
+                            shootingMediaPlayer.stop();
+                            shootingMediaPlayer.play();
+                        }
+                    });
                     counter = 0;
                 }
             }
@@ -330,10 +344,12 @@ public class GamePlay extends Application {
 
                     if (shot.collide(player)) {
                         player.explode();
-                        new Thread(() -> {
-                            explosionMediaPlayer.stop();
-                            explosionMediaPlayer.play();
-                        }).start();
+                        mediaPlayerExecutor.submit(() -> {
+                            synchronized (explosionMediaPlayer) {
+                                explosionMediaPlayer.stop();
+                                explosionMediaPlayer.play();
+                            }
+                        });
                     }
                     gameOver = player.isDestroyed();
                     if (gameOver) {
