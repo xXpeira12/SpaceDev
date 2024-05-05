@@ -6,15 +6,20 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import static config.Config.*;
+import java.io.File;
+
 
 public class Main extends Application {
 
     private Stage primaryStage;
+    private MediaPlayer mediaPlayer;
 
     public static void main(String[] args) {
         launch(args);
@@ -29,6 +34,13 @@ public class Main extends Application {
         BorderPane root = new BorderPane();
         root.setBackground(createSpaceBackground());
 
+        // Load background music
+        String backgroundMusicFile = "/ProgMethAllLecture/SpaceDev/assets/space_song.mp3"; // Adjust the path to your background music file
+        Media backgroundMusicMedia = new Media(new File(backgroundMusicFile).toURI().toString());
+        mediaPlayer = new MediaPlayer(backgroundMusicMedia);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the background music
+        mediaPlayer.play(); // Start playing the background music
+
         // Create main menu layout
         VBox menuLayout = new VBox(20);
         menuLayout.setAlignment(Pos.CENTER);
@@ -38,6 +50,7 @@ public class Main extends Application {
         Button startButton = createMenuButton("Start Game");
         startButton.setOnAction(e -> {
             try {
+                playButtonClickSound(); // Play button click sound
                 startGame();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -168,4 +181,17 @@ public class Main extends Application {
         System.out.println("High Scores");
         // Implement high scores display
     }
+
+    private void playButtonClickSound() {
+        String buttonClickSoundFile = "space_song.mp3"; // Adjust the path to your button click sound file
+        Media buttonClickMedia = new Media(new File(buttonClickSoundFile).toURI().toString());
+        MediaPlayer buttonClickPlayer = new MediaPlayer(buttonClickMedia);
+        buttonClickPlayer.play(); // Play the button click sound
+    }
+
+    @Override
+    public void stop() {
+        mediaPlayer.stop(); // Stop the background music when the application exits
+    }
+
 }
