@@ -45,11 +45,13 @@ public class Main extends Application {
     }
 
     public void setGameState(GameState state) {
-//        System.out.println("Current game state: " + gameState + "..." + "Setting game state to: " + state);
+        System.out.println("Current game state: " + gameState + "..." + "Setting game state to: " + state);
         gameState = state;
         switch (gameState) {
             case MAIN_MENU:
                 primaryStage.setScene(mainMenuScene);
+//                create new gameplayScene and remove the old one
+                createGameplayScene();
                 break;
             case PLAYING:
                 primaryStage.setScene(gameplayScene);
@@ -116,7 +118,6 @@ public class Main extends Application {
         System.out.println("Starting the game!");
         GamePlay gamePlay = new GamePlay();
         try {
-            gamePlay.setMainApp(this);
             gamePlay.start(primaryStage);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -226,10 +227,6 @@ public class Main extends Application {
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         StackPane gameplayLayout = new StackPane(canvas);
         gameplayScene = new Scene(gameplayLayout, WIDTH, HEIGHT);
-    }
-
-    public void showMainMenu() {
-        primaryStage.setScene(mainMenuScene);
     }
 
 }

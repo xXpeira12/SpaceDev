@@ -45,8 +45,7 @@ public class GamePlay extends Application {
     private boolean left, right, shoot, restart;
     private boolean shotFired;
     private int counter = 0;
-    private boolean isBackMain = false, isPaused = false;
-    private Main mainApp;
+    private boolean isPaused = false;
     private MediaPlayer shootingMediaPlayer;
     private MediaPlayer explosionMediaPlayer;
     private MediaPlayer dropItemMediaPlayer;
@@ -75,7 +74,6 @@ public class GamePlay extends Application {
                     break;
                 case ESCAPE:
                     isPaused = !isPaused;
-                    if (gameOver) isBackMain = true;
                     break;
             }
         });
@@ -349,15 +347,10 @@ public class GamePlay extends Application {
     private void displayGameOver(GraphicsContext gc) {
         gc.setFont(Font.font(35));
         gc.setFill(Color.YELLOW);
-        gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again \n Press ESC to return to Main Menu", WIDTH / 2.0, HEIGHT / 2.5);
+        gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again", WIDTH / 2.0, HEIGHT / 2.5);
         if (restart) {
             gameOver = false;
             setUp();
-        } else if (isBackMain) {
-            mainApp.setGameState(GameState.MAIN_MENU);
-            isBackMain = false;
-            isPaused = false;
-            gameOver = false;
         } else {
             return;
         }
@@ -367,9 +360,5 @@ public class GamePlay extends Application {
         gc.setFont(Font.font(35));
         gc.setFill(Color.YELLOW);
         gc.fillText("Paused \n Press ESC to resume", WIDTH / 2.0, HEIGHT / 2.5);
-    }
-
-    public void setMainApp(Main mainApp) {
-        this.mainApp = mainApp;
     }
 }
