@@ -133,10 +133,11 @@ public class GamePlay extends Application {
 
         Media shootingSound = new Media(new File("assets/shoot_sound.mp3").toURI().toString());
         shootingMediaPlayer = new MediaPlayer(shootingSound);
+        shootingMediaPlayer.setVolume(Math.min(DEFAULT_SFX_VOLUME, 0.5));
 
         Media explosionSound = new Media(new File("assets/explosion_sound.mp3").toURI().toString());
         explosionMediaPlayer = new MediaPlayer(explosionSound);
-        explosionMediaPlayer.setVolume(0.1);
+        explosionMediaPlayer.setVolume(DEFAULT_SFX_VOLUME);
     }
 
     private void run(GraphicsContext gc) {
@@ -191,12 +192,12 @@ public class GamePlay extends Application {
         player.update();
         player.draw();
         if (left) {
-            if(player.getPosX() > PADDING_ROCKET) {
+            if (player.getPosX() > PADDING_ROCKET) {
                 player.setPosX(player.getPosX() - 5);
             }
         }
         if (right) {
-            if(player.getPosX() < (WIDTH - PLAYER_SIZE)) {
+            if (player.getPosX() < (WIDTH - PLAYER_SIZE)) {
                 player.setPosX(player.getPosX() + 5);
             }
         }
@@ -346,11 +347,10 @@ public class GamePlay extends Application {
             gameOver = false;
             setUp();
         } else if (isBackMain) {
-            if (mainApp != null) {
-                mainApp.showMainMenu();
-                isBackMain = false;
-                gameOver = false;
-            }
+            mainApp.setGameState(GameState.MAIN_MENU);
+            isBackMain = false;
+            isPaused = false;
+            gameOver = false;
         } else {
             return;
         }

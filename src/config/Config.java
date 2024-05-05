@@ -49,4 +49,5 @@ public class Config {
     public static final int FAST_BOMB_BASE_SPEED = 2;
     public static final int BOSS_BOMB_SPEED_FACTOR = 50;
     public static final int BOSS_BOMB_BASE_SPEED = 2;
+    public static final double DEFAULT_SFX_VOLUME = 0.5;
 }
