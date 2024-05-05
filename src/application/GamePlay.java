@@ -11,6 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -39,7 +40,7 @@ public class GamePlay extends Application {
     List<Bomb> bombs;
     List<Item> items;
     public static int score;
-    private boolean left, right, shoot, restart;
+    private boolean left, right, shoot, restart, back;
     private boolean shotFired;
     int counter = 0;
 
@@ -65,6 +66,9 @@ public class GamePlay extends Application {
                 case ENTER:
                     restart = true;
                     break;
+                case ESCAPE:
+                    back = true;
+                    break;
             }
         });
 
@@ -82,6 +86,9 @@ public class GamePlay extends Application {
                     break;
                 case ENTER:
                     restart = false;
+                    break;
+                case ESCAPE:
+                    back = false;
                     break;
             }
         });
@@ -164,7 +171,7 @@ public class GamePlay extends Application {
     private void displayGameOver(GraphicsContext gc) {
         gc.setFont(Font.font(35));
         gc.setFill(Color.YELLOW);
-        gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again", WIDTH / 2.0, HEIGHT / 2.5);
+        gc.fillText("Game Over \n Your Score is: " + score + " \n Press Enter to play again \n Press ESC to return to Main Menu", WIDTH / 2.0, HEIGHT / 2.5);
         if (restart) {
             gameOver = false;
             setUp();

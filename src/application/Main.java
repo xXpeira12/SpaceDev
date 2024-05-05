@@ -3,11 +3,14 @@ package application;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import static config.Config.*;
 
 public class Main extends Application {
 
@@ -132,23 +135,18 @@ public class Main extends Application {
         GamePlay gamePlay = new GamePlay();
 
         // Create a new scene for the game play
-//        Scene gameScene = new Scene(new StackPane(), GamePlay.WIDTH, GamePlay.HEIGHT);
-//        gameScene.setOnKeyPressed(gamePlay::handleKeyPress); // Handle key presses in the game
-//
-//        // Set up the game canvas
-//        Canvas canvas = new Canvas(GamePlay.WIDTH, GamePlay.HEIGHT);
-//        GraphicsContext gc = canvas.getGraphicsContext2D();
-//        gamePlay.setGraphicsContext(gc);
-//
-//        // Add canvas to the game scene
-//        StackPane gamePane = new StackPane(canvas);
-//        gameScene.setRoot(gamePane);
+        Scene gameScene = new Scene(new StackPane(), WIDTH, HEIGHT);
 
-        // Start the game
-        gamePlay.start(new Stage());
+        // Set up the game canvas
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
+        StackPane gamePane = new StackPane(canvas);
+        gameScene.setRoot(gamePane);
 
         // Switch to the game scene
-//        primaryStage.setScene(gameScene);
+        primaryStage.setScene(gameScene);
+
+        // Start the game
+        gamePlay.start(primaryStage);
     }
 
     private void showHowToPlay() {
