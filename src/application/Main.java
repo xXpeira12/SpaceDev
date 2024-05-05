@@ -186,9 +186,6 @@ public class Main extends Application {
         Button itemsInfoButton = createMenuButton("Item & Enhancement Info");
         itemsInfoButton.setOnAction(e -> showItemsInfo());
 
-        Button highScoresButton = createMenuButton("High Scores");
-        highScoresButton.setOnAction(e -> showHighScores());
-
         Button exitButton = createMenuButton("Exit");
         exitButton.setOnAction(e -> primaryStage.close());
 
@@ -213,7 +210,7 @@ public class Main extends Application {
         // Add buttons to menu layout
         menuLayout.getChildren().addAll(
                 startButton, howToPlayButton, enemiesInfoButton,
-                itemsInfoButton, highScoresButton, exitButton,
+                itemsInfoButton, exitButton,
                 volumeContainer
         );
         // Add menu layout to root
